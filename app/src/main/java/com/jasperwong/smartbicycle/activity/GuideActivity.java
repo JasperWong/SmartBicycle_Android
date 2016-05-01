@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.jasperwong.smartbicycle.R;
 
-public class GuideActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
+public class GuideActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

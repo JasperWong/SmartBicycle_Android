@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.jasperwong.smartbicycle.R;
+import com.jasperwong.smartbicycle.ble.DeviceScanActivity;
 import com.jasperwong.smartbicycle.service.FrontService;
 
 
@@ -127,8 +128,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (v.getId()){
             case R.id.start_service:
 //                Toast.makeText(this,"onCLick",Toast.LENGTH_LONG).show();
-                serviceIntent=new Intent(this, FrontService.class);
-                startService(serviceIntent);
+//                serviceIntent=new Intent(this, FrontService.class);
+//                startService(serviceIntent);
+                Intent intent=new Intent(this, DeviceScanActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

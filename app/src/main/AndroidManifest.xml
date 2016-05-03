@@ -3,7 +3,10 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /><span style="white-space:pre">  </span>
     <application
         android:allowBackup="true"
         android:icon="@drawable/bike2_64px"
@@ -35,6 +38,12 @@
             android:name=".activity.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".ble.DeviceScanActivity"
+            android:theme="@android:style/Theme.Holo.Light">
+
+        </activity>
+        <service android:name=".ble.BluetoothLeService" android:enabled="true"/>
     </application>
 
 </manifest>

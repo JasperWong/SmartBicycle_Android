@@ -80,4 +80,6 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
     public void onClick(View v) {
 
     }
+
+
 }

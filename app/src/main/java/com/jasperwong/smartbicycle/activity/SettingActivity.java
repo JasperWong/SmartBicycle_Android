@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.jasperwong.smartbicycle.R;
 
-public class SettingActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
+public class SettingActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

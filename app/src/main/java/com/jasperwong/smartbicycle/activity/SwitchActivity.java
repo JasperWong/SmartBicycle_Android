@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import com.jasperwong.smartbicycle.R;
 
-public class SwitchActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
+public class SwitchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

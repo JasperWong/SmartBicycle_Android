@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -28,7 +29,9 @@ import com.jasperwong.smartbicycle.ble.DeviceScanActivity;
 import com.jasperwong.smartbicycle.service.FrontService;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
+
+
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
     private Button btn_start;
     private Intent serviceIntent;
@@ -142,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(MainActivity.this, "关闭前台服务", Toast.LENGTH_LONG).show();
+            BaseActivity.ActivityCollector.finishAll();
             stopService(serviceIntent);
         }
     };

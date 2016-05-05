@@ -45,7 +45,6 @@ import android.widget.Toast;
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.ble.BluetoothLeService;
 import com.jasperwong.smartbicycle.ble.DeviceAdapter;
-import com.jasperwong.smartbicycle.ble.DeviceScanActivity;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
 import com.jasperwong.smartbicycle.ble.SampleGattAttributes;
 import com.jasperwong.smartbicycle.service.FrontService;
@@ -394,7 +393,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        } else if (id == R.id.nav_send) {
 //
 //        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

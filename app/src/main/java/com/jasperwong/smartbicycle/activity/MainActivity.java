@@ -168,6 +168,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        startScan();
     }
 
     @Override
@@ -178,6 +179,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        unbindService(mServiceConnection);
     }
 
 
@@ -468,7 +475,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 public void run() {
                     mDeviceAdapter.addDevice(device);
                     mDeviceAdapter.notifyDataSetChanged();
-                    Log.d("test","add");
+//                    Log.d("test","add");
                 }
             });
         }

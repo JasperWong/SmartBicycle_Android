@@ -20,6 +20,21 @@
             <!--android:icon="@drawable/ic_menu_manage"-->
             <!--android:title="Tools" />-->
     </group>
+
+    <item android:title="about">
+        <menu>
+            <item
+                android:id="@+id/nav_state"
+                android:title="state"
+                android:showAsAction="never"/>
+
+            <item
+                android:id="@+id/nav_version"
+                android:title="version:1.0"/>
+
+        </menu>
+
+    </item>
     <!--<item android:title="Communicate">-->
         <!--<menu>-->
             <!--<item-->
@@ -32,6 +47,5 @@
                 <!--android:title="Send" />-->
         <!--</menu>-->
     <!--</item>-->
-
 
 </menu>

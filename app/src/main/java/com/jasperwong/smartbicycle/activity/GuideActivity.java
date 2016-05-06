@@ -54,7 +54,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         }
         setContentView(mMapView);
         mBaiduMap = mMapView.getMap();
-
+//
     }
 
     @Override

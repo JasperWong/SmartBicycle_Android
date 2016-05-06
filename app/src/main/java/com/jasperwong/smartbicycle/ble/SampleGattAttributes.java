@@ -27,6 +27,10 @@ public class SampleGattAttributes {
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
     public static String BLE_TX = "0000ffe1-0000-1000-8000-00805f9b34fb";
     public static String BLE_RX = "0000ffe1-0000-1000-8000-00805f9b34fb";
+<<<<<<< HEAD
+=======
+    public static String BLE_SERVICE = "713d0000-503e-4c75-ba94-3148f18d941e";
+>>>>>>> a79587f0a22a9bd9d7344b3fa597a00b707c4b4e
 
     static {
         // Sample Services.
@@ -35,6 +39,7 @@ public class SampleGattAttributes {
         // Sample Characteristics.
         attributes.put(HEART_RATE_MEASUREMENT, "Heart Rate Measurement");
         attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
+
     }
 
     public static String lookup(String uuid, String defaultName) {

@@ -122,6 +122,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter == null) {

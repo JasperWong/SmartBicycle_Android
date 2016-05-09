@@ -13,28 +13,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMapOptions;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.model.LatLng;
+
+import com.amap.api.maps.MapView;
 import com.jasperwong.smartbicycle.R;
 
 public class GuideActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     private static final String LTAG = GuideActivity.class.getSimpleName();
-    private MapView mMapView=null;
-    private BaiduMap mBaiduMap;
+    MapView mMapView = null;
     private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());
-//        setContentView(R.layout.guide);
         setContentView(R.layout.activity_guide);
-        mMapView=(MapView)findViewById(R.id.bmapView);
+        mMapView = (MapView) findViewById(R.id.aMap);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_guide);
         setSupportActionBar(toolbar);
 
@@ -46,19 +40,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra("x") && intent.hasExtra("y")) {
-            // 当用intent参数时，设置中心点为指定点
-            Bundle b = intent.getExtras();
-            LatLng p = new LatLng(b.getDouble("y"), b.getDouble("x"));
-            mMapView = new MapView(this,
-                    new BaiduMapOptions().mapStatus(new MapStatus.Builder()
-                            .target(p).build()));
-        } else {
-            mMapView = new MapView(this, new BaiduMapOptions());
-        }
-//        setContentView(mMapView);
-        mBaiduMap = mMapView.getMap();
+        mMapView.onCreate(savedInstanceState);
     }
 
     @Override
@@ -125,5 +107,11 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         mMapView.onDestroy();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，实现地图生命周期管理
+        mMapView.onSaveInstanceState(outState);
+    }
 
 }

@@ -14,6 +14,15 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /><span style="white-space:pre">  </span>
     <application
@@ -55,8 +64,8 @@
         <service android:name=".ble.BluetoothLeService" android:enabled="true"/>
 
         <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="7tneax2913OsyXPa5xTWs27sY0eIgFLf" />
+            android:name="com.amap.api.v2.apikey"
+            android:value="ed10638af173a56439c6c47f004d0b2e" />
 
 
     </application>

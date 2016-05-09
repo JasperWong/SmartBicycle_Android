@@ -24,10 +24,9 @@ import com.jasperwong.smartbicycle.R;
 public class GuideActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String LTAG = GuideActivity.class.getSimpleName();
-    private MapView mMapView;
+    private MapView mMapView=null;
     private BaiduMap mBaiduMap;
     private Button button;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,6 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener 
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.guide);
         mMapView=(MapView)findViewById(R.id.bmapView);
-
 //        setContentView(R.layout.activity_guide);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_guide);
 //        setSupportActionBar(toolbar);

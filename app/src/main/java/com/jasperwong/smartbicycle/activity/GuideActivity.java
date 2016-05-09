@@ -37,6 +37,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         mMapView=(MapView)findViewById(R.id.bmapView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_guide);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -44,6 +45,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         Intent intent = getIntent();
         if (intent.hasExtra("x") && intent.hasExtra("y")) {
             // 当用intent参数时，设置中心点为指定点
@@ -94,16 +96,16 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         return true;
     }
 
-//    @Override
-//    public void onBackPressed() {
-////        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-////        if (drawer.isDrawerOpen(GravityCompat.START)) {
-////            drawer.closeDrawer(GravityCompat.START);
-////        } else {
-////            super.onBackPressed();
-////        }
-//
-//    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
     @Override
     public void onClick(View v) {
     }

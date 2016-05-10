@@ -35,7 +35,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     private Button button;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
-    private RadioGroup mGPSModeGroup;
+//    private RadioGroup mGPSModeGroup;
     private OnLocationChangedListener mListener;
 
     @Override
@@ -114,11 +114,15 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     protected void onPause(){
         super.onPause();
         mMapView.onPause();
+        deactivate();
     }
 
     protected void onDestroy(){
         super.onDestroy();
         mMapView.onDestroy();
+        if(null != mlocationClient){
+            mlocationClient.onDestroy();
+        }
     }
 
     @Override

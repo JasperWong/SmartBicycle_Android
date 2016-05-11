@@ -33,10 +33,13 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     private MapView mMapView = null;
     private AMap aMap;
     private Button button;
+    private TextView textView;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
-//    private RadioGroup mGPSModeGroup;
+    private RadioGroup mGPSModeGroup;
     private OnLocationChangedListener mListener;
+
+    private TextView mLocationErrText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +51,12 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         init();
     }
 
@@ -104,6 +107,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     }
     @Override
     public void onClick(View v) {
+
     }
 
     protected void onResume(){
@@ -137,10 +141,10 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
             aMap = mMapView.getMap();
             setUpMap();
         }
-//        mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
-//        mGPSModeGroup.setOnCheckedChangeListener(this);
-//        mLocationErrText = (TextView)findViewById(R.id.location_errInfo_text);
-//        mLocationErrText.setVisibility(View.GONE);
+        mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
+        mGPSModeGroup.setOnCheckedChangeListener(this);
+        mLocationErrText = (TextView)findViewById(R.id.location_errInfo_text);
+        mLocationErrText.setVisibility(View.GONE);
     }
 
     private void setUpMap() {
@@ -155,7 +159,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     public void activate(OnLocationChangedListener listener) {
         mListener = listener;
         if (mlocationClient == null) {
-            mlocationClient = new AMapLocationClient(this);
+            mlocationClient = new AMapLocationClient(getApplicationContext());
             mLocationOption = new AMapLocationClientOption();
             //设置定位监听
             mlocationClient.setLocationListener(this);
@@ -181,8 +185,8 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr",errText);
-//                mLocationErrText.setVisibility(View.VISIBLE);
-//                mLocationErrText.setText(errText);
+                mLocationErrText.setVisibility(View.VISIBLE);
+                mLocationErrText.setText(errText);
             }
         }
     }
@@ -195,24 +199,25 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
             mlocationClient.onDestroy();
         }
         mlocationClient = null;
+//        mlocationClient.stopLocation();
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-//        switch (checkedId) {
-//            case R.id.gps_locate_button:
-//                // 设置定位的类型为定位模式
-//                aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-//                break;
-//            case R.id.gps_follow_button:
-//                // 设置定位的类型为 跟随模式
-//                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
-//                break;
-//            case R.id.gps_rotate_button:
-//                // 设置定位的类型为根据地图面向方向旋转
-//                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
-//                break;
-//        }
+        switch (checkedId) {
+            case R.id.gps_locate_button:
+                // 设置定位的类型为定位模式
+                aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+                break;
+            case R.id.gps_follow_button:
+                // 设置定位的类型为 跟随模式
+                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
+                break;
+            case R.id.gps_rotate_button:
+                // 设置定位的类型为根据地图面向方向旋转
+                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
+                break;
+        }
 
     }
 

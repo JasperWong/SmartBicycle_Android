@@ -1,6 +1,12 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.amap.api.location.AMapLocation;
@@ -38,13 +45,16 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     private AMapLocationClientOption mLocationOption;
     private RadioGroup mGPSModeGroup;
     private OnLocationChangedListener mListener;
-
     private TextView mLocationErrText;
+    private LocationManager locationManager=null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
+        locationManager=(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         mMapView = (MapView) findViewById(R.id.aMap);
         mMapView.onCreate(savedInstanceState);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_guide);
@@ -56,9 +66,18 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+//        openGPSSettings();
+        openGPS2();
         init();
+
     }
+
+
+    private void openGPS2(){
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(intent,0);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,45 +115,12 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-
-    }
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    protected void onResume(){
-        super.onResume();
-        mMapView.onResume();
-    }
-
-    protected void onPause(){
-        super.onPause();
-        mMapView.onPause();
-        deactivate();
-    }
-
-    protected void onDestroy(){
-        super.onDestroy();
-        mMapView.onDestroy();
-        if(null != mlocationClient){
-            mlocationClient.onDestroy();
-        }
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，实现地图生命周期管理
         mMapView.onSaveInstanceState(outState);
     }
+
 
     private void init() {
         if (aMap == null) {
@@ -219,6 +205,39 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
                 break;
         }
 
+    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    protected void onResume(){
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    protected void onPause(){
+        super.onPause();
+        mMapView.onPause();
+        deactivate();
+    }
+
+    protected void onDestroy(){
+        super.onDestroy();
+        mMapView.onDestroy();
+        if(null != mlocationClient){
+            mlocationClient.onDestroy();
+        }
     }
 
 }

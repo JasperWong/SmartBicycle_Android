@@ -15,12 +15,6 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_connect"
-        android:orderInCategory="100"
-        android:title="connect"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/action_disconnect"
         android:orderInCategory="100"
         android:title="disconnect"

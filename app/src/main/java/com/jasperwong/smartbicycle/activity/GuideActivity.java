@@ -1,7 +1,9 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
@@ -13,12 +15,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +40,7 @@ import com.amap.api.maps.MapView;
 import com.jasperwong.smartbicycle.R;
 
 public class GuideActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,LocationSource,
-        AMapLocationListener,RadioGroup.OnCheckedChangeListener {
+        AMapLocationListener{
 
     private static final String LTAG = GuideActivity.class.getSimpleName();
     private MapView mMapView = null;
@@ -48,27 +54,30 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     private TextView mLocationErrText;
     private LocationManager locationManager=null;
 
-
+    private AMapLocationClient locationClient = null;
+    private AMapLocationClientOption locationOption = null;
+    private String destination=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
-        locationManager=(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        mMapView = (MapView) findViewById(R.id.aMap);
-        mMapView.onCreate(savedInstanceState);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_guide);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        openGPSSettings();
-        openGPS2();
+        locationManager=(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        mMapView = (MapView) findViewById(R.id.aMap);
+        mMapView.onCreate(savedInstanceState);
         init();
+
+//        openGPSSettings();
+//        openGPS2();
+
 
     }
 
@@ -79,56 +88,13 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_guide) {
-            Intent guideIntent= new Intent(this,GuideActivity.class);
-            startActivity(guideIntent);
-            // Handle the camera action
-        } else if (id == R.id.nav_switch) {
-            Intent switchIntent=new Intent(this,SwitchActivity.class);
-            startActivity(switchIntent);
-        } else if (id == R.id.nav_setting) {
-            Intent settingIntent=new Intent(this,SettingActivity.class);
-            startActivity(settingIntent);
-        }
-//        else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，实现地图生命周期管理
-        mMapView.onSaveInstanceState(outState);
-    }
-
-
     private void init() {
         if (aMap == null) {
             aMap = mMapView.getMap();
             setUpMap();
         }
-        mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
-        mGPSModeGroup.setOnCheckedChangeListener(this);
+//        mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
+//        mGPSModeGroup.setOnCheckedChangeListener(this);
         mLocationErrText = (TextView)findViewById(R.id.location_errInfo_text);
         mLocationErrText.setVisibility(View.GONE);
     }
@@ -138,7 +104,7 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
     }
 
     @Override
@@ -185,27 +151,8 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
             mlocationClient.onDestroy();
         }
         mlocationClient = null;
-//        mlocationClient.stopLocation();
     }
 
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.gps_locate_button:
-                // 设置定位的类型为定位模式
-                aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-                break;
-            case R.id.gps_follow_button:
-                // 设置定位的类型为 跟随模式
-                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
-                break;
-            case R.id.gps_rotate_button:
-                // 设置定位的类型为根据地图面向方向旋转
-                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
-                break;
-        }
-
-    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -240,4 +187,72 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，实现地图生命周期管理
+        mMapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_guide_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id =item.getItemId();
+        switch (id){
+            case R.id.route:
+                final AlertDialog.Builder routeDialog=new AlertDialog.Builder(this);
+                View edit= getLayoutInflater().inflate(R.layout.edit,null);
+                routeDialog.setCancelable(true);
+//                routeDialog.setTitle("路径规划");
+                routeDialog.setView(edit);
+                View title=getLayoutInflater().inflate(R.layout.title,null);
+                routeDialog.setCustomTitle(title);
+                final EditText DestinationEdit=(EditText)edit.findViewById(R.id.edit_destination);
+                routeDialog.setPositiveButton("确定",new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface,int which){
+                        destination=DestinationEdit.getText().toString();
+                        Log.d("destination",destination);
+
+                    }
+                });
+
+                routeDialog.setNegativeButton("取消",new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface,int which){
+                        Log.d("route","cancel");
+                    }
+                });
+                routeDialog.show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        if (id == R.id.nav_guide) {
+            Intent guideIntent= new Intent(this,GuideActivity.class);
+            startActivity(guideIntent);
+            // Handle the camera action
+        } else if (id == R.id.nav_switch) {
+            Intent switchIntent=new Intent(this,SwitchActivity.class);
+            startActivity(switchIntent);
+        } else if (id == R.id.nav_setting) {
+            Intent settingIntent=new Intent(this,SettingActivity.class);
+            startActivity(settingIntent);
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }

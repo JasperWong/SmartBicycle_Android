@@ -52,10 +52,6 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
     private RadioGroup mGPSModeGroup;
     private OnLocationChangedListener mListener;
     private TextView mLocationErrText;
-    private LocationManager locationManager=null;
-
-    private AMapLocationClient locationClient = null;
-    private AMapLocationClientOption locationOption = null;
     private String destination=null;
 
     @Override
@@ -70,7 +66,6 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        locationManager=(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         mMapView = (MapView) findViewById(R.id.aMap);
         mMapView.onCreate(savedInstanceState);
         init();
@@ -219,7 +214,9 @@ public class GuideActivity extends BaseActivity implements NavigationView.OnNavi
                     public void onClick(DialogInterface dialogInterface,int which){
                         destination=DestinationEdit.getText().toString();
                         Log.d("destination",destination);
-
+                        Intent intent=new Intent(GuideActivity.this,SearchActivity.class);
+                        intent.putExtra("destination",destination);
+                        startActivityForResult(intent,1);
                     }
                 });
 

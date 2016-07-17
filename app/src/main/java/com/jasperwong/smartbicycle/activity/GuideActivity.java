@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.amap.api.maps.model.LatLng;
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
 import com.amap.api.navi.AMapNaviView;
@@ -24,6 +22,9 @@ import com.autonavi.tbt.TrafficFacilityInfo;
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.util.TTSController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GuideActivity extends BaseActivity implements AMapNaviListener,AMapNaviViewListener{
 
     public final static String[] dirActions = { "无", "自车", "左转", "右转", "左前方行驶",
@@ -41,10 +42,15 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
     AMapNavi mAMapNavi;
     NaviLatLng mEndLatLng;
 
+    List<NaviLatLng> mStartList = new ArrayList<NaviLatLng>();
+    List<NaviLatLng> mEndList = new ArrayList<NaviLatLng>();
+    List<NaviLatLng> mWayPointList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
+        naviInit();
         mAMapNaviView = (AMapNaviView) findViewById(R.id.navi_view);
         mAMapNaviView.onCreate(savedInstanceState);
         mAMapNaviView.setAMapNaviViewListener(this);
@@ -52,15 +58,13 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
         EndLat=intent.getStringExtra("EndLat");
         EndLng=intent.getStringExtra("EndLng");
         mEndLatLng=new NaviLatLng(Double.parseDouble(EndLat),Double.parseDouble(EndLng));
-        naviInit();
+
     }
 
     @Override
     public void onInitNaviSuccess() {
         mAMapNavi.calculateWalkRoute(mEndLatLng);
     }
-
-
 
     private void naviInit(){
         mTtsManager = TTSController.getInstance(getApplicationContext());
@@ -70,12 +74,60 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
         mAMapNavi = AMapNavi.getInstance(getApplicationContext());
         mAMapNavi.addAMapNaviListener(this);
         mAMapNavi.addAMapNaviListener(mTtsManager);
-        mAMapNavi.setEmulatorNaviSpeed(150);
+        mAMapNavi.setEmulatorNaviSpeed(1000);
+    }
+
+    @Override
+    public void onNaviInfoUpdate(NaviInfo naviInfo) {
+        Log.d("test_info", "前方 " + dirActions[naviInfo.m_Icon]);
     }
 
     @Override
     public void onInitNaviFailure() {
         Toast.makeText(this, "init navi Failed", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    @Override
+    public void onNaviViewLoaded() {
+        Log.d("wlx", "导航页面加载成功");
+        Log.d("wlx", "请不要使用AMapNaviView.getMap().setOnMapLoadedListener();会overwrite导航SDK内部画线逻辑");
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAMapNaviView.onResume();
+//        mStartList.add(mStartLatlng);
+        mEndList.add(mEndLatLng);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAMapNaviView.onPause();
+
+//        仅仅是停止你当前在说的这句话，一会到新的路口还是会再说的
+        mTtsManager.stopSpeaking();
+//
+//        停止导航之后，会触及底层stop，然后就不会再有回调了，但是讯飞当前还是没有说完的半句话还是会说完
+//        mAMapNavi.stopNavi();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAMapNaviView.onDestroy();
+        //since 1.6.0
+        //不再在naviview destroy的时候自动执行AMapNavi.stopNavi();
+        //请自行执行
+        mAMapNavi.stopNavi();
+        mAMapNavi.destroy();
+        mTtsManager.destroy();
+    }
+
+    @Override
+    public void onCalculateRouteSuccess() {
+        mAMapNavi.startNavi(AMapNavi.EmulatorNaviMode);
     }
 
     @Override
@@ -109,11 +161,6 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
     }
 
     @Override
-    public void onCalculateRouteSuccess() {
-        mAMapNavi.startNavi(AMapNavi.EmulatorNaviMode);
-    }
-
-    @Override
     public void onCalculateRouteFailure(int i) {
 
     }
@@ -140,12 +187,6 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
 
     @Override
     public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {
-
-
-    }
-
-    @Override
-    public void onNaviInfoUpdate(NaviInfo naviInfo) {
 
     }
 
@@ -244,38 +285,4 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
 
     }
 
-    @Override
-    public void onNaviViewLoaded() {
-
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mAMapNaviView.onResume();
-//        mStartList.add(mStartLatlng);
-//        mEndList.add(mEndLatlng);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mAMapNaviView.onPause();
-
-//        仅仅是停止你当前在说的这句话，一会到新的路口还是会再说的
-        mTtsManager.stopSpeaking();
-//
-//        停止导航之后，会触及底层stop，然后就不会再有回调了，但是讯飞当前还是没有说完的半句话还是会说完
-//        mAMapNavi.stopNavi();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mAMapNaviView.onDestroy();
-        //since 1.6.0
-        //不再在naviview destroy的时候自动执行AMapNavi.stopNavi();
-        //请自行执行
-        mAMapNavi.stopNavi();
-        mAMapNavi.destroy();
-        mTtsManager.destroy();
-    }
 }

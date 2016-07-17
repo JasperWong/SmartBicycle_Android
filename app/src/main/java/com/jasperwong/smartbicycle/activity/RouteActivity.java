@@ -174,7 +174,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
 
     private void showProgressDialog() {
         if (progDialog == null)
-            progDialog = new ProgressDialog(this);
+        progDialog = new ProgressDialog(this);
         progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progDialog.setIndeterminate(false);
         progDialog.setCancelable(false);
@@ -392,6 +392,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         Intent intent =new Intent(RouteActivity.this,GuideActivity.class);
         intent.putExtra("EndLat",String.valueOf(mEndLatLng.latitude));
         intent.putExtra("EndLng",String.valueOf(mEndLatLng.longitude));
+        finish();
         startActivity(intent);
     }
 

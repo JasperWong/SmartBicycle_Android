@@ -170,6 +170,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        stopService(serviceIntent);
         unbindService(mServiceConnection);
     }
 

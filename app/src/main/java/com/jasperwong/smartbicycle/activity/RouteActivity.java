@@ -216,12 +216,14 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
     protected void onResume(){
         super.onResume();
         mMapView.onResume();
+        Log.d("test_info","onResume");
     }
 
     protected void onPause(){
         super.onPause();
         mMapView.onPause();
         deactivate();
+        Log.d("test_info","onPause");
     }
 
     protected void onDestroy(){
@@ -230,6 +232,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         if(null != mlocationClient){
             mlocationClient.onDestroy();
         }
+        Log.d("test_info","onDestroy");
     }
 
     @Override
@@ -392,6 +395,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         Intent intent =new Intent(RouteActivity.this,GuideActivity.class);
         intent.putExtra("EndLat",String.valueOf(mEndLatLng.latitude));
         intent.putExtra("EndLng",String.valueOf(mEndLatLng.longitude));
+        deactivate();
         finish();
         startActivity(intent);
     }

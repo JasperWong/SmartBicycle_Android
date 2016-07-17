@@ -41,7 +41,7 @@
             android:name=".activity.SwitchActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".activity.GuideActivity"
+            android:name=".activity.RouteActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
@@ -68,8 +68,7 @@
         <service android:name=".service.FrontService" />
 
         <activity
-            android:name=".activity.SearchActivity"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:name=".activity.GuideActivity">
         </activity>
     </application>
 

@@ -327,13 +327,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-//            case R.id.start_service:
-////                Toast.makeText(this,"onCLick",Toast.LENGTH_LONG).show();
-////                serviceIntent=new Intent(this, FrontService.class);
-////                startService(serviceIntent);
-//                Intent intent=new Intent(this, DeviceScanActivity.class);
-//                startActivity(intent);
-//                break;
+
             default:
                 break;
         }

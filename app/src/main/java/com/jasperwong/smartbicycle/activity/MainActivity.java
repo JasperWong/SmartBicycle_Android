@@ -1,14 +1,11 @@
 package com.jasperwong.smartbicycle.activity;
 
-import android.app.Notification;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,25 +13,16 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.NotificationCompat;
-import android.support.v7.view.menu.MenuView;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -46,11 +34,9 @@ import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.ble.BluetoothLeService;
 import com.jasperwong.smartbicycle.ble.DeviceAdapter;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
-import com.jasperwong.smartbicycle.ble.SampleGattAttributes;
 import com.jasperwong.smartbicycle.service.FrontService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -316,7 +302,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         int id = item.getItemId();
 
         if (id == R.id.nav_guide) {
-            Intent guideIntent= new Intent(this,GuideActivity.class);
+            Intent guideIntent= new Intent(this,RouteActivity.class);
             startActivity(guideIntent);
             // Handle the camera action
         } else if (id == R.id.nav_switch) {

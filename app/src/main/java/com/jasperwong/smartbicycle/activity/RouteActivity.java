@@ -386,17 +386,20 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         return false;
     }
     public void startAMapNavi(Marker marker) {
-        // 构造导航参数
+        AMapLocation location =mlocationClient.getLastKnownLocation();
         mEndLatLng=marker.getPosition();
         endLatLng=new NaviLatLng(mEndLatLng.latitude,mEndLatLng.longitude);
         NaviPara naviPara = new NaviPara();
         // 设置终点位置
-        naviPara.setTargetPoint(marker.getPosition());
+//        naviPara.setTargetPoint(marker.getPosition());
         Intent intent =new Intent(RouteActivity.this,GuideActivity.class);
+
         intent.putExtra("EndLat",String.valueOf(mEndLatLng.latitude));
         intent.putExtra("EndLng",String.valueOf(mEndLatLng.longitude));
-        deactivate();
-        finish();
+        intent.putExtra("StartLat",String.valueOf(location.getLatitude()));
+        intent.putExtra("StartLng",String.valueOf(location.getLongitude()));
+//        deactivate();
+//        finish();
         startActivity(intent);
     }
 

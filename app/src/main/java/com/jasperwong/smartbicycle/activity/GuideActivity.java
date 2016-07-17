@@ -1,5 +1,6 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +26,7 @@ import com.jasperwong.smartbicycle.util.TTSController;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideActivity extends BaseActivity implements AMapNaviListener,AMapNaviViewListener{
+public class GuideActivity extends Activity implements AMapNaviListener,AMapNaviViewListener{
 
     public final static String[] dirActions = { "无", "自车", "左转", "右转", "左前方行驶",
             "右前方行驶", "左后方行驶", "右后方行驶", "左转掉头", "直行", "到达途经点", "进入环岛", "驶出环岛",
@@ -36,20 +37,20 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
     private PoiSearch mPoiSearch;
     private String EndLat;
     private String EndLng;
+    private String StartLat;
+    private String StartLng;
 
     TTSController mTtsManager;
     AMapNaviView mAMapNaviView;
     AMapNavi mAMapNavi;
     NaviLatLng mEndLatLng;
+    NaviLatLng mStartLatlng;
 
-    List<NaviLatLng> mStartList = new ArrayList<NaviLatLng>();
-    List<NaviLatLng> mEndList = new ArrayList<NaviLatLng>();
-    List<NaviLatLng> mWayPointList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guide);
+        setContentView(R.layout.guide_);
         naviInit();
         mAMapNaviView = (AMapNaviView) findViewById(R.id.navi_view);
         mAMapNaviView.onCreate(savedInstanceState);
@@ -57,13 +58,16 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
         Intent intent =this.getIntent();
         EndLat=intent.getStringExtra("EndLat");
         EndLng=intent.getStringExtra("EndLng");
+        StartLat=intent.getStringExtra("StartLat");
+        StartLng=intent.getStringExtra("StartLng");
         mEndLatLng=new NaviLatLng(Double.parseDouble(EndLat),Double.parseDouble(EndLng));
-
+        mStartLatlng=new NaviLatLng(Double.parseDouble(StartLat),Double.parseDouble(StartLng));
     }
 
     @Override
     public void onInitNaviSuccess() {
-        mAMapNavi.calculateWalkRoute(mEndLatLng);
+//        mAMapNavi.calculateWalkRoute(mEndLatLng);
+        mAMapNavi.calculateWalkRoute(mStartLatlng,mEndLatLng);
     }
 
     private void naviInit(){
@@ -99,7 +103,7 @@ public class GuideActivity extends BaseActivity implements AMapNaviListener,AMap
         super.onResume();
         mAMapNaviView.onResume();
 //        mStartList.add(mStartLatlng);
-        mEndList.add(mEndLatLng);
+//        mEndList.add(mEndLatLng);
     }
     @Override
     protected void onPause() {

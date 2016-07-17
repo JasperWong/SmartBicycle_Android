@@ -63,8 +63,6 @@
             android:name="com.amap.api.location.APSService"
             android:enabled="true" />
 
-        <activity android:name=".activity.aMapBaseActivity" />
-
         <service android:name=".service.FrontService" />
 
         <activity

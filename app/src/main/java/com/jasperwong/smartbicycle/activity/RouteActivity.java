@@ -18,8 +18,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -31,32 +29,18 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.NaviPara;
 import com.amap.api.maps.overlay.PoiOverlay;
-import com.amap.api.navi.AMapNavi;
-import com.amap.api.navi.AMapNaviListener;
-import com.amap.api.navi.AMapNaviView;
-import com.amap.api.navi.AMapNaviViewListener;
-import com.amap.api.navi.model.AMapLaneInfo;
-import com.amap.api.navi.model.AMapNaviCross;
-import com.amap.api.navi.model.AMapNaviInfo;
-import com.amap.api.navi.model.AMapNaviLocation;
-import com.amap.api.navi.model.AMapNaviTrafficFacilityInfo;
-import com.amap.api.navi.model.AimLessModeCongestionInfo;
-import com.amap.api.navi.model.AimLessModeStat;
-import com.amap.api.navi.model.NaviInfo;
 import com.amap.api.navi.model.NaviLatLng;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.core.SuggestionCity;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.autonavi.tbt.TrafficFacilityInfo;
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.util.AMapUtil;
-import com.jasperwong.smartbicycle.util.TTSController;
 import com.jasperwong.smartbicycle.util.ToastUtil;
 import java.util.List;
 
 public class RouteActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,LocationSource,
-        AMapLocationListener,PoiSearch.OnPoiSearchListener,AMap.OnMapClickListener,AMap.InfoWindowAdapter,AMap.OnMarkerClickListener,AMapNaviListener,AMapNaviViewListener{
+        AMapLocationListener,PoiSearch.OnPoiSearchListener,AMap.OnMapClickListener,AMap.InfoWindowAdapter,AMap.OnMarkerClickListener{
 
     private static final String TAG = RouteActivity.class.getSimpleName();
     private MapView mMapView = null;
@@ -73,12 +57,6 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
     private PoiSearch.Query query;
     public NaviLatLng endLatLng=null;
 
-    TTSController mTtsManager;
-    AMapNaviView mAMapNaviView;
-    AMapNavi mAMapNavi;
-//    NaviLatLng mStartLatLng=new NaviLatLng();
-//    NaviLatLng mEndLatLng=new NaviLatLng();
-    LatLng mStartLatLng=null;
     LatLng mEndLatLng=null;
 
     @Override
@@ -106,18 +84,6 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivityForResult(intent,0);
     }
-
-    private void naviInit(){
-        mTtsManager = TTSController.getInstance(getApplicationContext());
-        mTtsManager.init();
-        mTtsManager.startSpeaking();
-
-        mAMapNavi = AMapNavi.getInstance(getApplicationContext());
-        mAMapNavi.addAMapNaviListener(this);
-        mAMapNavi.addAMapNaviListener(mTtsManager);
-        mAMapNavi.setEmulatorNaviSpeed(150);
-    }
-
 
     private void init() {
         if (aMap == null) {
@@ -298,11 +264,6 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
                     public void onClick(DialogInterface dialogInterface,int which){
                         mlocationClient.stopLocation(); //避免搜索后地图回归到定位点,以后修改方案
                         searchButton();
-//                        destination=DestinationEdit.getText().toString();
-//                        Log.d("destination",destination);
-//                        Intent intent=new Intent(GuideActivity.this,SearchActivity.class);
-//                        intent.putExtra("destination",destination);
-//                        startActivityForResult(intent,1);
                     }
                 });
 
@@ -422,226 +383,17 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         return false;
     }
     public void startAMapNavi(Marker marker) {
-
         // 构造导航参数
         mEndLatLng=marker.getPosition();
         endLatLng=new NaviLatLng(mEndLatLng.latitude,mEndLatLng.longitude);
         NaviPara naviPara = new NaviPara();
         // 设置终点位置
         naviPara.setTargetPoint(marker.getPosition());
-        // 设置导航策略，这里是避免拥堵
-//        naviPara.setNaviStyle(NaviPara.DRIVING_AVOID_CONGESTION);
-        naviInit();
-
-
-        // 调起高德地图导航
-//        try {
-//            AMapUtils.openAMapNavi(naviPara, getApplicationContext());
-//        } catch (AMapException e) {
-//
-//            // 如果没安装会进入异常，调起下载页面
-//            AMapUtils.getLatestAMapApp(getApplicationContext());
-
-        }
-
-    @Override
-    public void onInitNaviFailure() {
-        Toast.makeText(this, "init navi Failed", Toast.LENGTH_SHORT).show();
+        Intent intent =new Intent(RouteActivity.this,GuideActivity.class);
+        intent.putExtra("EndLat",String.valueOf(mEndLatLng.latitude));
+        intent.putExtra("EndLng",String.valueOf(mEndLatLng.longitude));
+        startActivity(intent);
     }
 
-    @Override
-    public void onInitNaviSuccess() {
-        mAMapNavi.calculateWalkRoute(endLatLng);
-//        mAMapNavi.calculateDriveRoute(mStartList, mEndList, mWayPointList, PathPlanningStrategy.DRIVING_DEFAULT);
-    }
-
-    @Override
-    public void onStartNavi(int i) {
-
-    }
-
-    @Override
-    public void onTrafficStatusUpdate() {
-
-    }
-
-    @Override
-    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
-
-    }
-
-    @Override
-    public void onGetNavigationText(int i, String s) {
-
-    }
-
-    @Override
-    public void onEndEmulatorNavi() {
-
-    }
-
-    @Override
-    public void onArriveDestination() {
-
-    }
-
-    @Override
-    public void onCalculateRouteSuccess() {
-        mAMapNavi.startNavi(AMapNavi.EmulatorNaviMode);
-    }
-
-    @Override
-    public void onCalculateRouteFailure(int i) {
-
-    }
-
-    @Override
-    public void onReCalculateRouteForYaw() {
-
-    }
-
-    @Override
-    public void onReCalculateRouteForTrafficJam() {
-
-    }
-
-    @Override
-    public void onArrivedWayPoint(int i) {
-
-    }
-
-    @Override
-    public void onGpsOpenStatus(boolean b) {
-
-    }
-
-    @Override
-    public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {
-
-    }
-
-    @Override
-    public void onNaviInfoUpdate(NaviInfo naviInfo) {
-
-    }
-
-    @Override
-    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo aMapNaviTrafficFacilityInfo) {
-
-    }
-
-    @Override
-    public void OnUpdateTrafficFacility(TrafficFacilityInfo trafficFacilityInfo) {
-
-    }
-
-    @Override
-    public void showCross(AMapNaviCross aMapNaviCross) {
-
-    }
-
-    @Override
-    public void hideCross() {
-
-    }
-
-    @Override
-    public void showLaneInfo(AMapLaneInfo[] aMapLaneInfos, byte[] bytes, byte[] bytes1) {
-
-    }
-
-    @Override
-    public void hideLaneInfo() {
-
-    }
-
-    @Override
-    public void onCalculateMultipleRoutesSuccess(int[] ints) {
-
-    }
-
-    @Override
-    public void notifyParallelRoad(int i) {
-
-    }
-
-    @Override
-    public void OnUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
-
-    }
-
-    @Override
-    public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {
-
-    }
-
-    @Override
-    public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {
-
-    }
-
-    @Override
-    public void onNaviSetting() {
-
-    }
-
-    @Override
-    public void onNaviCancel() {
-
-    }
-
-    @Override
-    public boolean onNaviBackClick() {
-        return false;
-    }
-
-    @Override
-    public void onNaviMapMode(int i) {
-
-    }
-
-    @Override
-    public void onNaviTurnClick() {
-
-    }
-
-    @Override
-    public void onNextRoadClick() {
-
-    }
-
-    @Override
-    public void onScanViewButtonClick() {
-
-    }
-
-    @Override
-    public void onLockMap(boolean b) {
-
-    }
-
-    @Override
-    public void onNaviViewLoaded() {
-
-    }
 }
 
-//    @Override
-//    public void onGetInputtips(List<Tip> tipList, int rCode) {
-//        if (rCode == 1000) {// 正确返回
-//            List<String> listString = new ArrayList<String>();
-//            for (int i = 0; i < tipList.size(); i++) {
-//                listString.add(tipList.get(i).getName());
-//            }
-//            ArrayAdapter<String> aAdapter = new ArrayAdapter<String>(
-//                    getApplicationContext(),
-//                    R.layout.route_inputs, listString);
-//            DestinationEdit.setAdapter(aAdapter);
-//            aAdapter.notifyDataSetChanged();
-//        } else {
-//            ToastUtil.showerror(this, rCode);
-//        }
-//
-//    }
-//    }
-//}

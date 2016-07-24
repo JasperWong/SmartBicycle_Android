@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_guide"
-            android:icon="@drawable/navigation_72_drawer"
+            android:icon="@drawable/ic_explore_black_24dp"
             android:title="导航" />
         <item
             android:id="@+id/nav_switch"
@@ -18,14 +18,10 @@
             android:id="@+id/nav_setting"
             android:icon="@drawable/setting2_drawer_72"
             android:title="设置" />
-
-        <!--<item-->
-            <!--android:id="@+id/nav_manage"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Tools" />-->
     </group>
 
-    <item android:title="about">
+    <item android:title="关于"
+        >
         <menu>
             <item
                 android:id="@+id/nav_state"

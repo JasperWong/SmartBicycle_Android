@@ -308,10 +308,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Intent settingIntent=new Intent(this,SettingActivity.class);
             startActivity(settingIntent);
         }
-        else if (id == R.id.nav_connect) {
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            startActivity(mainIntent);
-        }
+//        else if (id == R.id.nav_connect) {
+//            Intent mainIntent = new Intent(this, MainActivity.class);
+//            startActivity(mainIntent);
+//        }
 //        } else if (id == R.id.nav_share) {
 //
 //        } else if (id == R.id.nav_send) {
@@ -384,6 +384,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         return true;
     }
+
 //    private void updateConnectionState(final int resourceId) {
 //        runOnUiThread(new Runnable() {
 //            @Override

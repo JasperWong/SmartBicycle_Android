@@ -6,13 +6,6 @@
         android:endColor="#2E7D32"
         android:startColor="#81C784"
         android:type="linear" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="8dp"
-        android:text="6666666666666666666666"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"/>
+
         <!--android:background="@drawable/bg_oval_with_gradient" />-->
 </shape>

@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
 
     private BluetoothGattCharacteristic mNotifyCharacteristic;
-
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
@@ -99,15 +98,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -172,6 +162,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onDestroy();
         stopService(serviceIntent);
         unbindService(mServiceConnection);
+        mBluetoothLeService.disconnect();
+        mBluetoothLeService.close();
     }
 
 
@@ -207,7 +199,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
                 BluetoothGattCharacteristic characteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
                 // Error
-                characteristic.setValue("this is a test write for characteristic");
+//                characteristic.setValue("this is a test write for characteristic");
                 //characteristic.setValue("test");
                 mBluetoothLeService.writeCharacteristic(characteristic);
 //                displayGattServices(mBluetoothLeService.getSupportedGattServices());
@@ -215,7 +207,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 Log.d("test","write");
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
                 BluetoothGattCharacteristic characteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-                characteristic.setValue("123");
+//                characteristic.setValue("123");
                 mBluetoothLeService.writeCharacteristic(characteristic);
 //                mBluetoothGatt.readRemoteRssi();
 
@@ -223,17 +215,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mConnected = false;
 //                updateConnectionState(R.string.disconnected);
                 invalidateOptionsMenu();
-                clearUI();
+//                clearUI();
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             }
         }
     };
-
-    private void clearUI() {
-        mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
-        mDataField.setText(R.string.no_data);
-    }
 
 //    private void updateConnectionState(final int resourceId) {
 //        runOnUiThread(new Runnable() {
@@ -290,7 +277,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             startScan();
         }
 
+        if(id==R.id.action_refresh){
+            stopScan();
+            mDeviceList.clear();
+            startScan();
+        }
+
         if (id == R.id.action_disconnect) {
+            mBluetoothLeService.disconnect();
+            mBluetoothLeService.close();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -313,8 +308,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Intent settingIntent=new Intent(this,SettingActivity.class);
             startActivity(settingIntent);
         }
-//        else if (id == R.id.nav_manage) {
-//
+        else if (id == R.id.nav_connect) {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
+        }
 //        } else if (id == R.id.nav_share) {
 //
 //        } else if (id == R.id.nav_send) {
@@ -342,30 +339,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             stopService(serviceIntent);
         }
     };
-
-
-    public boolean initialize() {
-        // For API level 18 and above, get a reference to BluetoothAdapter through
-        // BluetoothManager.
-        if (mBluetoothManager == null)
-        {
-            mBluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-            if (mBluetoothManager == null)
-            {
-                Log.e(TAG, "Unable to initialize BluetoothManager.");
-                return false;
-            }
-        }
-
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
-        if (mBluetoothAdapter == null)
-        {
-            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
-            return false;
-        }
-
-        return true;
-    }
 
     public boolean startScan() {
         if(null == mBluetoothAdapter)
@@ -400,6 +373,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     };
 
+    public boolean stopScan()
+    {
+        if(null == mBluetoothAdapter)
+        {
+            return false;
+        }
+
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+
+        return true;
+    }
 //    private void updateConnectionState(final int resourceId) {
 //        runOnUiThread(new Runnable() {
 //            @Override

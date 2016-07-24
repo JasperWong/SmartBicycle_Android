@@ -52,6 +52,10 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             Intent settingIntent=new Intent(this,SettingActivity.class);
             startActivity(settingIntent);
         }
+        else if (id == R.id.nav_connect) {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
+        }
 //        else if (id == R.id.nav_manage) {
 //
 //        } else if (id == R.id.nav_share) {

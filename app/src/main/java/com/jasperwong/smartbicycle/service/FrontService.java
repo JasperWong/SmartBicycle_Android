@@ -42,7 +42,7 @@ public class FrontService extends Service {
 
     private void displayNotification(){
         Intent intent =new Intent(TAG);
-         PendingIntent piResult0 = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent piResult0 = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         Notification mNotification = new Notification.Builder(FrontService.this)
                 .setContentTitle("SmartBicycle")
                 .setContentText("点击停止")

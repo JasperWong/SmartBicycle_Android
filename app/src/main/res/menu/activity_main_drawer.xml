@@ -4,24 +4,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_guide"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_explore_black_24dp"
             android:title="导航" />
         <item
             android:id="@+id/nav_switch"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/switch5_drawer_72"
             android:title="开关" />
         <item
+            android:title="设备"
+            android:id="@+id/nav_connect"
+            android:icon="@drawable/bluetooth_setting_drawer"/>
+        <item
             android:id="@+id/nav_setting"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/setting_drawer"
             android:title="设置" />
-
-        <!--<item-->
-            <!--android:id="@+id/nav_manage"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Tools" />-->
     </group>
 
-    <item android:title="about">
+    <item android:title="关于"
+        >
         <menu>
             <item
                 android:id="@+id/nav_state"

@@ -1,20 +1,34 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+
 import com.jasperwong.smartbicycle.R;
+import com.jasperwong.smartbicycle.ble.GATTUtils;
+import com.jasperwong.smartbicycle.service.BLEService;
+
+import java.util.List;
 
 public class SwitchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
-
+    private String TAG = this.getClass().getSimpleName();
+    private BLEService mBluetoothLeService=null;
+    BluetoothGattCharacteristic mCharacteristic=null;
+    Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +43,59 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Intent gattServiceIntent=new Intent(SwitchActivity.this,BLEService.class);
+        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
+        button=(Button)findViewById(R.id.button);
+        button.setOnClickListener(this);
+
     }
+
+    private final ServiceConnection mServiceConnection = new ServiceConnection()
+    {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service)
+        {
+            Log.d(TAG, "start service Connection");
+
+            mBluetoothLeService = ((BLEService.LocalBinder) service).getService();
+
+            //从搜索出来的services里面找出合适的service
+            List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
+            mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
+            mCharacteristic.setValue("123");
+            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//            //
+//            if( null != mCharacteristic )
+//            {
+//                mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
+//                InputStream inputStream = buildSendData();
+//                inputStreamArrayList.add(inputStream);
+//                byte[] writeBytes = new byte[11];
+//                int byteCount = 0;
+//                try
+//                {
+//                    byteCount = inputStream.read(writeBytes,0,11);
+//                    if( byteCount > 0)
+//                    {
+//                        mCharacteristic.setValue(writeBytes);
+//                        mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//                    }
+//                }
+//                catch (IOException e)
+//                {
+//                    e.printStackTrace();
+//                }
+//            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName)
+        {
+            Log.d(TAG, "end Service Connection");
+            mBluetoothLeService = null;
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,7 +109,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         int id = item.getItemId();
 
         if (id == R.id.nav_guide) {
-            Intent guideIntent= new Intent(this,GuideActivity.class);
+            Intent guideIntent= new Intent(this,RouteActivity.class);
             startActivity(guideIntent);
             // Handle the camera action
         } else if (id == R.id.nav_switch) {
@@ -52,6 +118,10 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         } else if (id == R.id.nav_setting) {
             Intent settingIntent=new Intent(this,SettingActivity.class);
             startActivity(settingIntent);
+        }
+        else if (id == R.id.nav_connect) {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
         }
 //        else if (id == R.id.nav_manage) {
 //
@@ -78,6 +148,11 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
 
     @Override
     public void onClick(View v) {
-
+        int id=v.getId();
+        switch (id) {
+            case R.id.button:
+                mBluetoothLeService.writeCharacteristic(mCharacteristic);
+        }
     }
+
 }

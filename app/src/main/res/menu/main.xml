@@ -5,25 +5,19 @@
     <item
         android:id="@+id/action_scan"
         android:orderInCategory="100"
-        android:title="scan"
+        android:title="扫描"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
-        android:title="refresh"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/action_connect"
-        android:orderInCategory="100"
-        android:title="connect"
+        android:title="刷新"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_disconnect"
         android:orderInCategory="100"
-        android:title="disconnect"
+        android:title="断开连接"
         app:showAsAction="never"/>
 
 

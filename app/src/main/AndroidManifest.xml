@@ -52,14 +52,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"></activity>
         <activity
-            android:name=".ble.DeviceScanActivity"
-            android:theme="@android:style/Theme.Holo.Light"
-            android:launchMode="singleTask"></activity>
+            android:name=".activity.GuideActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask">
 
-        <service
-            android:name=".ble.BluetoothLeService"
-            android:enabled="true" />
-
+        </activity>
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="f8206bf14753854669b643569292e1b5"/>
@@ -68,15 +65,13 @@
         <service
             android:name="com.amap.api.location.APSService"
             android:enabled="true" />
+        <service
+            android:name=".service.FrontService"
+            android:enabled="true"/>
+        <service
+            android:name=".service.BLEService"
+            android:enabled="true"/>
 
-        <service android:name=".service.FrontService" />
-
-        <activity
-            android:name=".activity.GuideActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask">
-
-        </activity>
     </application>
 
 </manifest>

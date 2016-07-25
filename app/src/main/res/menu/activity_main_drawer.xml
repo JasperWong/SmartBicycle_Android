@@ -13,10 +13,10 @@
         <item
             android:title="设备"
             android:id="@+id/nav_connect"
-            android:icon="@drawable/bluetooth_drawer_72"/>
+            android:icon="@drawable/bluetooth_setting_drawer"/>
         <item
             android:id="@+id/nav_setting"
-            android:icon="@drawable/setting2_drawer_72"
+            android:icon="@drawable/setting_drawer"
             android:title="设置" />
     </group>
 

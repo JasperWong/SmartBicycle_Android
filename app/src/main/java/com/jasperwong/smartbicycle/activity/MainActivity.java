@@ -1,5 +1,6 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -42,10 +43,8 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
-    private Button btn_start;
     private Intent serviceIntent;
-    private TextView mConnectionState;
-
+    private ProgressDialog progDialog = null;
     private boolean mConnected = false;
     private TextView mDataField;
 
@@ -79,6 +78,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private Context mContext=this;
+    private boolean isConnected=false;
 
     private onScanDeviceListener mOnScanDeviceListener;
 
@@ -138,15 +138,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
 
         mState=(MenuItem)drawer.findViewById(R.id.nav_guide);
-//        mState.setTitle("abc");
-
-//        initialize();
-
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
         startScan();
     }
 
+    private void showProgressDialog() {
+        if (progDialog == null){
+            progDialog = new ProgressDialog(this);
+        }
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progDialog.setIndeterminate(false);
+        progDialog.setCancelable(false);
+        progDialog.setMessage("正在搜索");
+        progDialog.show();
+    }
+
+    private void dissmissProgressDialog() {
+        if (progDialog != null) {
+            progDialog.dismiss();
+        }
+    }
     @Override
     protected void onResume(){
         super.onResume();
@@ -191,9 +203,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+
                 mConnected = true;
+                Toast.makeText(MainActivity.this,"连接成功",Toast.LENGTH_LONG).show();
 //                updateConnectionState(R.string.connected);
-                invalidateOptionsMenu();
+//                invalidateOptionsMenu();
+                Intent intent1=new Intent(MainActivity.this,RouteActivity.class);
+                startActivity(intent1);
             }  else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
@@ -214,7 +230,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
 //                updateConnectionState(R.string.disconnected);
-                invalidateOptionsMenu();
+                Toast.makeText(MainActivity.this,"断开连接",Toast.LENGTH_LONG).show();
+//                invalidateOptionsMenu();
 //                clearUI();
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
@@ -345,7 +362,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         {
             return false;
         }
-
+        showProgressDialog();
         return mBluetoothAdapter.startLeScan(mLeScanCallback);
     }
 
@@ -359,7 +376,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
             runOnUiThread(new Runnable() {
@@ -367,6 +383,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 public void run() {
                     mDeviceAdapter.addDevice(device);
                     mDeviceAdapter.notifyDataSetChanged();
+                    dissmissProgressDialog();
 //                    Log.d("test","add");
                 }
             });
@@ -385,14 +402,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-//    private void updateConnectionState(final int resourceId) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                mConnectionState.setText(resourceId);
-//            }
-//        });
-//    }
 
 }
 

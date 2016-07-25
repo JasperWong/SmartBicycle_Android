@@ -193,14 +193,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 Toast.makeText(MainActivity.this,"连接成功",Toast.LENGTH_LONG).show();
 //                updateConnectionState(R.string.connected);
 //                invalidateOptionsMenu();
-                Intent intent1=new Intent(MainActivity.this,RouteActivity.class);
+                Intent intent1=new Intent(MainActivity.this,SwitchActivity.class);
                 startActivity(intent1);
             }  else if (BLEService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
                 BluetoothGattCharacteristic characteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
                 // Error
-                characteristic.setValue("this is a test write for characteristic");
+//                characteristic.setValue("this is a test write for characteristic");
                 //characteristic.setValue("test");
                 mBluetoothLeService.writeCharacteristic(characteristic);
 //                displayGattServices(mBluetoothLeService.getSupportedGattServices());

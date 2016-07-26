@@ -15,26 +15,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jasperwong.smartbicycle.R;
-import com.jasperwong.smartbicycle.decorators.EventDecorator;
-import com.jasperwong.smartbicycle.decorators.HighlightWeekendsDecorator;
-import com.jasperwong.smartbicycle.decorators.MySelectorDecorator;
-import com.jasperwong.smartbicycle.decorators.OneDayDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.concurrent.Executors;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,7 +33,6 @@ import butterknife.ButterKnife;
 public class UserActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,OnDateSelectedListener,OnMonthChangedListener {
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
-    private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
     @Bind(R.id.textView)
@@ -151,6 +140,6 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
+//        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
     }
 }

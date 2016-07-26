@@ -38,6 +38,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activity.SwitchActivity"
@@ -55,12 +56,14 @@
         <activity
             android:name=".activity.GuideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask">
+        </activity>
 
         <activity
             android:name=".activity.UserActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask">
+        </activity>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

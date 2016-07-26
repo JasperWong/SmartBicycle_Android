@@ -43,15 +43,18 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
         if (id == R.id.nav_guide) {
             Intent guideIntent= new Intent(this,RouteActivity.class);
             startActivity(guideIntent);
-        } else if (id == R.id.nav_switch) {
+        }   else if (id == R.id.nav_switch) {
             Intent switchIntent=new Intent(this,SwitchActivity.class);
             startActivity(switchIntent);
-        } else if (id == R.id.nav_setting) {
+        }   else if (id == R.id.nav_setting) {
             Intent settingIntent=new Intent(this,SettingActivity.class);
             startActivity(settingIntent);
-        }else if(id==R.id.nav_share){
+        }   else if(id==R.id.nav_share){
             Intent intent=new Intent(this,UserActivity.class);
             startActivity(intent);
+        }   else if (id == R.id.nav_connect) {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

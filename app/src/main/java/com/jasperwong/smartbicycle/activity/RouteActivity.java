@@ -303,6 +303,9 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         }else if(id==R.id.nav_share){
             Intent intent=new Intent(this,UserActivity.class);
             startActivity(intent);
+        }else if (id == R.id.nav_connect) {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

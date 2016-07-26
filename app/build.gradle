@@ -29,4 +29,6 @@ dependencies {
     compile files('libs/AMap_Search_V3.2.1_20160308.jar')
     compile files('libs/Volley.jar')
     compile files('libs/AMap3DMap_3.3.1_AMapNavi_1.8.0_20160420.jar')
+    compile 'com.jakewharton:butterknife:7.0.1'
+//    compile 'com.jakewharton:butterknife-sample:7.0.1'
 }

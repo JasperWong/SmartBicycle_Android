@@ -1,10 +1,10 @@
 package com.jasperwong.smartbicycle.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,18 +19,35 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jasperwong.smartbicycle.R;
+import com.jasperwong.smartbicycle.decorators.EventDecorator;
+import com.jasperwong.smartbicycle.decorators.HighlightWeekendsDecorator;
+import com.jasperwong.smartbicycle.decorators.MySelectorDecorator;
+import com.jasperwong.smartbicycle.decorators.OneDayDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.Executors;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
-public class UserActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class UserActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,OnDateSelectedListener,OnMonthChangedListener {
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+    private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
+    @Bind(R.id.calendarView)
+    MaterialCalendarView widget;
+    @Bind(R.id.textView)
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,37 +64,30 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        new SimpleCalendarDialogFragment().show(getSupportFragmentManager(),"test");
+
+        ButterKnife.bind(this);
+        widget.setOnDateChangedListener(this);
+        widget.setOnMonthChangedListener(this);
+
+        //Setup initial text
+        textView.setText(getSelectedDatesString());
     }
 
-    public static class SimpleCalendarDialogFragment extends DialogFragment implements OnDateSelectedListener {
-
-        private TextView textView;
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.dialog_basic, container, false);
+    private String getSelectedDatesString() {
+        CalendarDay date = widget.getSelectedDate();
+        if (date == null) {
+            return "No Selection";
         }
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-
-            textView = (TextView) view.findViewById(R.id.textView);
-
-            MaterialCalendarView widget = (MaterialCalendarView) view.findViewById(R.id.calendarView);
-
-            widget.setOnDateChangedListener(this);
-        }
-
-        @Override
-        public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-            textView.setText(FORMATTER.format(date.getDate()));
-        }
+        return FORMATTER.format(date.getDate());
     }
 
 
 
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        //If you change a decorate, you need to invalidate decorators
+        textView.setText(getSelectedDatesString());
+    }
 
     @Override
     public void onBackPressed() {
@@ -137,5 +147,10 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
     }
 }

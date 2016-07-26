@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jasperwong.smartbicycle.R;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 
 import java.text.DateFormat;
@@ -44,34 +47,34 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        new SimpleCalendarDialogFragment().show(getSupportFragmentManager(),"test");
+        new SimpleCalendarDialogFragment().show(getSupportFragmentManager(),"test");
     }
 
-//    public static class SimpleCalendarDialogFragment extends DialogFragment implements OnDateSelectedListener {
-//
-//        private TextView textView;
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//            return inflater.inflate(R.layout.dialog_basic, container, false);
-//        }
-//
-//        @Override
-//        public void onViewCreated(View view, Bundle savedInstanceState) {
-//            super.onViewCreated(view, savedInstanceState);
-//
-//            textView = (TextView) view.findViewById(R.id.textView);
-//
-//            MaterialCalendarView widget = (MaterialCalendarView) view.findViewById(R.id.calendarView);
-//
-//            widget.setOnDateChangedListener(this);
-//        }
-//
-//        @Override
-//        public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-//            textView.setText(FORMATTER.format(date.getDate()));
-//        }
-//    }
+    public static class SimpleCalendarDialogFragment extends DialogFragment implements OnDateSelectedListener {
+
+        private TextView textView;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.dialog_basic, container, false);
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+
+            textView = (TextView) view.findViewById(R.id.textView);
+
+            MaterialCalendarView widget = (MaterialCalendarView) view.findViewById(R.id.calendarView);
+
+            widget.setOnDateChangedListener(this);
+        }
+
+        @Override
+        public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+            textView.setText(FORMATTER.format(date.getDate()));
+        }
+    }
 
 
 

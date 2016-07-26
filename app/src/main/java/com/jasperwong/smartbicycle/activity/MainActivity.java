@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.service.BLEService;
-import com.jasperwong.smartbicycle.ble.DeviceAdapter;
+import com.jasperwong.smartbicycle.adapter.DeviceAdapter;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
 import com.jasperwong.smartbicycle.service.FrontService;
 
@@ -296,19 +296,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_guide) {
             Intent guideIntent= new Intent(this,RouteActivity.class);
             startActivity(guideIntent);
-            // Handle the camera action
         } else if (id == R.id.nav_switch) {
             Intent switchIntent=new Intent(this,SwitchActivity.class);
             startActivity(switchIntent);
         } else if (id == R.id.nav_setting) {
             Intent settingIntent=new Intent(this,SettingActivity.class);
             startActivity(settingIntent);
+        }else if(id==R.id.nav_share){
+            Intent intent=new Intent(this,UserActivity.class);
+            startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -1,4 +1,4 @@
-package com.jasperwong.smartbicycle.ble;
+package com.jasperwong.smartbicycle.adapter;
 
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;

@@ -71,30 +71,20 @@ public class BLEService extends Service
     public final static String ACTION_DATA_WRITE =
             "com.example.bluetooth.le.EXTRA_DATA";
 
-<<<<<<< HEAD:app/src/main/java/com/jasperwong/smartbicycle/ble/BluetoothLeService.java
+
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
-<<<<<<< HEAD
 
 
-
-=======
-=======
->>>>>>> ChangeToAmap:app/src/main/java/com/jasperwong/smartbicycle/service/BLEService.java
     public final static UUID UUID_BLE_TX = UUID
             .fromString(SampleGattAttributes.BLE_TX);
     public final static UUID UUID_BLE_RX = UUID
             .fromString(SampleGattAttributes.BLE_RX);
     public final static UUID UUID_BLE_SERVICE = UUID
             .fromString(SampleGattAttributes.BLE_SERVICE);
-<<<<<<< HEAD:app/src/main/java/com/jasperwong/smartbicycle/ble/BluetoothLeService.java
->>>>>>> a79587f0a22a9bd9d7344b3fa597a00b707c4b4e
+
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
-
-=======
->>>>>>> ChangeToAmap:app/src/main/java/com/jasperwong/smartbicycle/service/BLEService.java
-
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback()
     {

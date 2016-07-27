@@ -25,8 +25,8 @@
         >
 
         <com.jasperwong.smartbicycle.view.CircleImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/icon_own"
             android:id="@+id/icon"/>
 
@@ -36,7 +36,7 @@
             android:id="@+id/nameTV"
             android:text="JasperWong"
             android:layout_toRightOf="@+id/icon"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:textStyle="bold"
             android:textSize="15dp"
@@ -108,7 +108,7 @@
             android:id="@+id/KM"
             android:text="KM"
             android:layout_toRightOf="@id/kmTV"
-            android:layout_alignBottom="@+id/kmTV"
+            android:layout_marginTop="35dp"
             android:layout_marginLeft="5dp" />
         <TextView
             android:layout_width="wrap_content"
@@ -167,7 +167,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/MonthTV"
+            android:id="@+id/dayTV"
             android:text="2016年7月1日"
             android:textSize="15dp"
             android:textStyle="bold"
@@ -195,7 +195,7 @@
             android:layout_height="1dp"
             android:background="@color/gray"
             android:layout_width="match_parent"
-            android:layout_below="@+id/MonthTV"
+            android:layout_below="@+id/dayTV"
             android:id="@+id/line"
             android:layout_marginTop="10dp">
         </View>
@@ -206,7 +206,6 @@
         android:id="@+id/calendarView"
         android:layout_below="@+id/line"
         android:layout_marginTop="3dp">
-
     </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
     </RelativeLayout>

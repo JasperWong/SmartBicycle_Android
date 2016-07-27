@@ -28,8 +28,10 @@ import butterknife.ButterKnife;
 public class UserActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,OnDateSelectedListener,OnMonthChangedListener {
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+    private TextView dayShow;
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
+
 //    @Bind(R.id.textView)
 //    TextView textView;
 
@@ -39,6 +41,8 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_user);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_user);
         setSupportActionBar(toolbar);
+
+        dayShow=(TextView)findViewById(R.id.dayTV);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -74,7 +78,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         //If you change a decorate, you need to invalidate decorators
-
+        dayShow.setText(FORMATTER.format(date.getDate()));
     }
 
     @Override
@@ -105,7 +109,6 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

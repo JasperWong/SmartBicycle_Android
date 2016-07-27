@@ -57,6 +57,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         //Setup initial text
         widget.setDynamicHeightEnabled(true);
         widget.setTileHeightDp(35);
+        widget.setTopbarVisible(false);
 //        textView.setText(getSelectedDatesString());
     }
 

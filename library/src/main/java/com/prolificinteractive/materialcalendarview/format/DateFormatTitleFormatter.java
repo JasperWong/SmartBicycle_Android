@@ -18,7 +18,7 @@ public class DateFormatTitleFormatter implements TitleFormatter {
      */
     public DateFormatTitleFormatter() {
         this.dateFormat = new SimpleDateFormat(
-                "LLLL yyyy", Locale.getDefault()
+                "yyyy LLLL", Locale.getDefault()
         );
     }
 

@@ -4,28 +4,169 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.jasperwong.smartbicycle.activity.UserActivity"
     tools:showIn="@layout/app_bar_user"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/snow">
+    <!--<View-->
+        <!--android:layout_height="3dp"-->
+        <!--android:background="@color/gray"-->
+        <!--android:layout_width="match_parent"-->
+        <!--&gt;-->
+    <!--</View>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        >
+
+        <com.jasperwong.smartbicycle.view.CircleImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/icon_own"
+            android:id="@+id/icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameTV"
+            android:text="JasperWong"
+            android:layout_toRightOf="@+id/icon"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/idTV"
+            android:text="ID:18653628"
+            android:layout_toRightOf="@+id/icon"
+            android:layout_below="@+id/nameTV"
+            android:layout_alignLeft="@id/nameTV"
+            android:layout_marginTop="3dp"
+            />
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:id="@+id/star"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/star"
+            android:layout_alignTop="@+id/nameTV"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="3dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/idTV"
+            android:layout_below="@+id/star"
+            android:text="初级骑士"
+            android:textStyle="bold"/>
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_height="3dp"
+        android:background="@color/gray"
+        android:layout_width="match_parent">
+    </View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:id="@+id/recordTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="骑行记录"
+            android:textColor="@color/cadetblue"/>
+        <TextView
+            android:layout_below="@+id/recordTV"
+            android:id="@+id/kmTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="0.00"
+            android:textSize="25dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/KM"
+            android:text="KM"
+            android:layout_toRightOf="@id/kmTV"
+            android:layout_alignBottom="@+id/kmTV"
+            android:layout_marginLeft="5dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="累计里程"
+            android:id="@+id/total_mile"
+            android:layout_below="@+id/kmTV"
+            android:layout_alignTop="@+id/times"
+            android:textColor="@color/cadetblue"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:layout_alignParentRight="true"
+            android:id="@+id/hourTV"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="累计小时"
+            android:id="@+id/hour"
+            android:layout_below="@+id/hourTV"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/cadetblue"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:id="@+id/timesTV"
+            android:layout_below="@+id/hour"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/black"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="累计次数"
+            android:id="@+id/times"
+            android:layout_below="@+id/timesTV"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/cadetblue"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_height="3dp"
+        android:background="@color/gray"
+        android:layout_width="match_parent">
+    </View>
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/calendarView">
+        android:id="@+id/calendarView"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">>
 
     </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
-    <TextView
-        android:id="@+id/textView"
-        android:layout_margin="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        />
 
 </LinearLayout>

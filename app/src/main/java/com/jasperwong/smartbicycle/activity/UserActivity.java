@@ -1,14 +1,9 @@
 package com.jasperwong.smartbicycle.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.support.design.widget.NavigationView;
+ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,8 +30,8 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
-    @Bind(R.id.textView)
-    TextView textView;
+//    @Bind(R.id.textView)
+//    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +52,12 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
-
+//        widget.setTopbarVisible(false);
+//        widget.set
         //Setup initial text
-        textView.setText(getSelectedDatesString());
+        widget.setDynamicHeightEnabled(true);
+        widget.setTileHeightDp(35);
+//        textView.setText(getSelectedDatesString());
     }
 
     private String getSelectedDatesString() {
@@ -75,7 +73,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         //If you change a decorate, you need to invalidate decorators
-        textView.setText(getSelectedDatesString());
+
     }
 
     @Override

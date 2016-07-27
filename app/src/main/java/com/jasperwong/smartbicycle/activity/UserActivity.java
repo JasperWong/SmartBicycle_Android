@@ -32,9 +32,6 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
 
-//    @Bind(R.id.textView)
-//    TextView textView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

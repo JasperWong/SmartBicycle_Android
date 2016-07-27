@@ -11,6 +11,7 @@ import com.jasperwong.smartbicycle.R;
 /**
  * Created by JasperWong on 2016/7/27.
  */
+
 public class EditDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
@@ -21,11 +22,5 @@ public class EditDialogFragment extends DialogFragment {
         super.onViewCreated(view,saveInstanceState);
 
 
-
-
-
     }
-
-
-
 }

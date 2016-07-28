@@ -192,12 +192,12 @@ public class BLEService extends Service
     {
         final Intent intent = new Intent(action);
 
-        if (UUID_BLE_RX.equals(characteristic.getUuid()))
-        {
-            Log.d(TAG, "write data to extra data");
-            byte[] rx = characteristic.getValue();
-            Log.d("rece", "rx[0] = " + rx[0]);
-            intent.putExtra(EXTRA_DATA, rx);
+        final byte[] data = characteristic.getValue();
+        if (data != null && data.length > 0) {
+            final StringBuilder stringBuilder = new StringBuilder(data.length);
+            for(byte byteChar : data)
+                stringBuilder.append(String.format("%02X ", byteChar));
+            intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
         }
         sendBroadcast(intent);
     }
@@ -402,7 +402,7 @@ public class BLEService extends Service
 
         // This is specific to Heart Rate Measurement.
         if (UUID_BLE_RX.equals(characteristic.getUuid())) {
-             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
             UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             mBluetoothGatt.writeDescriptor(descriptor);

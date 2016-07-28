@@ -195,6 +195,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //                invalidateOptionsMenu();
                 Intent intent1=new Intent(MainActivity.this,SwitchActivity.class);
                 startActivity(intent1);
+
             }  else if (BLEService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
@@ -219,7 +220,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //                invalidateOptionsMenu();
 //                clearUI();
             } else if (BLEService.ACTION_DATA_AVAILABLE.equals(action)) {
-                displayData(intent.getStringExtra(BLEService.EXTRA_DATA));
+                Log.d("re123",intent.getStringExtra(BLEService.EXTRA_DATA));
+//                displayData(intent.getStringExtra(BLEService.EXTRA_DATA));
             }
         }
     };
@@ -232,12 +234,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //            }
 //        });
 //    }
-
-    private void displayData(String data) {
-        if (data != null) {
-            mDataField.setText(data);
-        }
-    }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -281,6 +277,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if(id==R.id.action_refresh){
             stopScan();
+            mBluetoothLeService.disconnect();
             mDeviceList.clear();
             startScan();
         }
@@ -327,7 +324,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(MainActivity.this, "关闭前台服务", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "关闭程序", Toast.LENGTH_LONG).show();
             BaseActivity.ActivityCollector.finishAll();
             stopService(serviceIntent);
         }
@@ -364,6 +361,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
             });
         }
+
     };
 
     public boolean stopScan()

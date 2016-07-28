@@ -18,14 +18,6 @@
         android:src="@drawable/navi_header_background"
         />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/imageView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-
-        <!--android:src="@drawable/bike2_64px"-->
-        <!--/>-->
-    <!--&lt;!&ndash;android:paddingTop="@dimen/nav_header_vertical_spacing"&ndash;&gt;-->
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"

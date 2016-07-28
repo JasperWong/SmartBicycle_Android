@@ -1,5 +1,6 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.ComponentName;
@@ -63,12 +64,13 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             //从搜索出来的services里面找出合适的service
             List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-//            mCharacteristic.setValue("123");
-//            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+            mCharacteristic.setValue("123");
+            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//            mBluetoothLeService.readCharacteristic(mCharacteristic);
 //            //
-//            if( null != mCharacteristic )
-//            {
-//                mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
+            if( null != mCharacteristic )
+            {
+                mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
 //                InputStream inputStream = buildSendData();
 //                inputStreamArrayList.add(inputStream);
 //                byte[] writeBytes = new byte[11];
@@ -86,7 +88,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
 //                {
 //                    e.printStackTrace();
 //                }
-//            }
+           }
         }
 
         @Override
@@ -95,6 +97,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             Log.d(TAG, "end Service Connection");
             mBluetoothLeService = null;
         }
+
     };
 
     @Override

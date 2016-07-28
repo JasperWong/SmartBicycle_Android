@@ -77,7 +77,6 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         mMapView = (MapView) findViewById(R.id.aMap);
         mMapView.onCreate(savedInstanceState);
         init();
-        mEditDialogFrament=new EditDialogFragment();
 //        openGPS();
     }
 
@@ -259,16 +258,12 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
                 final AlertDialog.Builder routeDialog=new AlertDialog.Builder(this);
                 View edit= getLayoutInflater().inflate(R.layout.edit,null);
                 routeDialog.setCancelable(true);
-//                routeDialog.setTitle("路径规划");
-//                routeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 routeDialog.setView(edit);
-//                View title=getLayoutInflater().inflate(R.layout.title,null);
-//                routeDialog.setCustomTitle(title);
                 DestinationEdit=(EditText)edit.findViewById(R.id.determinationET);
                 routeDialog.setPositiveButton("确定",new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface,int which){
-                        mlocationClient.stopLocation(); //避免搜索后地图回归到定位点,以后修改方案
+                        mlocationClient.stopLocation(); //避免搜索后地图回归到定位点,以后修改
                         searchButton();
                     }
                 });
@@ -280,7 +275,6 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
                     }
                 });
                 routeDialog.show();
-//                mEditDialogFrament.show(getFragmentManager(),"test");
                 break;
             default:
                 break;
@@ -395,6 +389,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
     }
     public void startAMapNavi(Marker marker) {
         AMapLocation location =mlocationClient.getLastKnownLocation();
+
         mEndLatLng=marker.getPosition();
         endLatLng=new NaviLatLng(mEndLatLng.latitude,mEndLatLng.longitude);
         NaviPara naviPara = new NaviPara();
@@ -406,6 +401,8 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         intent.putExtra("EndLng",String.valueOf(mEndLatLng.longitude));
         intent.putExtra("StartLat",String.valueOf(location.getLatitude()));
         intent.putExtra("StartLng",String.valueOf(location.getLongitude()));
+//        intent.putExtra("StartLat",String.valueOf(aMap.getMyLocation().getLatitude()));
+//        intent.putExtra("StartLng",String.valueOf(aMap.getMyLocation().getLongitude()));
 //        deactivate();
 //        finish();
         startActivity(intent);

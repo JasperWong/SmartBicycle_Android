@@ -1,5 +1,6 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,8 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.jasperwong.smartbicycle.R;
+import com.jasperwong.smartbicycle.fragment.EditDialogFragment;
 
 public class SettingActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
+
+    private EditDialogFragment mEditDialogFrament=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,9 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mEditDialogFrament=new EditDialogFragment();
+        FragmentManager fragmentManager=getFragmentManager();
+        mEditDialogFrament.show(getFragmentManager(),"test");
     }
 
     @Override

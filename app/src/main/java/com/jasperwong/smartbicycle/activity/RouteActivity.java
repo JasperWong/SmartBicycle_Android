@@ -1,6 +1,7 @@
 package com.jasperwong.smartbicycle.activity;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -35,6 +37,7 @@ import com.amap.api.services.core.SuggestionCity;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.jasperwong.smartbicycle.R;
+import com.jasperwong.smartbicycle.fragment.EditDialogFragment;
 import com.jasperwong.smartbicycle.util.AMapUtil;
 import com.jasperwong.smartbicycle.util.ToastUtil;
 import java.util.List;
@@ -56,7 +59,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
     private int currentPage = 0;
     private PoiSearch.Query query;
     public NaviLatLng endLatLng=null;
-
+    private EditDialogFragment mEditDialogFrament=null;
     LatLng mEndLatLng=null;
 
     @Override
@@ -74,9 +77,8 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         mMapView = (MapView) findViewById(R.id.aMap);
         mMapView.onCreate(savedInstanceState);
         init();
-
+        mEditDialogFrament=new EditDialogFragment();
 //        openGPS();
-
     }
 
 
@@ -258,10 +260,11 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
                 View edit= getLayoutInflater().inflate(R.layout.edit,null);
                 routeDialog.setCancelable(true);
 //                routeDialog.setTitle("路径规划");
+//                routeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 routeDialog.setView(edit);
-                View title=getLayoutInflater().inflate(R.layout.title,null);
-                routeDialog.setCustomTitle(title);
-                DestinationEdit=(EditText)edit.findViewById(R.id.edit_destination);
+//                View title=getLayoutInflater().inflate(R.layout.title,null);
+//                routeDialog.setCustomTitle(title);
+                DestinationEdit=(EditText)edit.findViewById(R.id.determinationET);
                 routeDialog.setPositiveButton("确定",new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface,int which){
@@ -277,6 +280,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
                     }
                 });
                 routeDialog.show();
+//                mEditDialogFrament.show(getFragmentManager(),"test");
                 break;
             default:
                 break;

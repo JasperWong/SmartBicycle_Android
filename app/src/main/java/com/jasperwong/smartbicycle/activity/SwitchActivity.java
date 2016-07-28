@@ -63,8 +63,8 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             //从搜索出来的services里面找出合适的service
             List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-            mCharacteristic.setValue("123");
-            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//            mCharacteristic.setValue("123");
+//            mBluetoothLeService.writeCharacteristic(mCharacteristic);
 //            //
 //            if( null != mCharacteristic )
 //            {

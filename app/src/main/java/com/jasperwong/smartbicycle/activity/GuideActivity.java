@@ -1,6 +1,7 @@
 package com.jasperwong.smartbicycle.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -30,6 +31,7 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.tbt.TrafficFacilityInfo;
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
+import com.jasperwong.smartbicycle.fragment.EditDialogFragment;
 import com.jasperwong.smartbicycle.service.BLEService;
 import com.jasperwong.smartbicycle.util.TTSController;
 
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuideActivity extends Activity implements AMapNaviListener,AMapNaviViewListener{
+
 
     private String TAG=this.getClass().getSimpleName();
     public final static String[] dirActions = { "无", "自车", "左转", "右转", "左前方行驶",
@@ -79,128 +82,128 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
         mEndLatLng=new NaviLatLng(Double.parseDouble(EndLat),Double.parseDouble(EndLng));
         mStartLatlng=new NaviLatLng(Double.parseDouble(StartLat),Double.parseDouble(StartLng));
 
-        Intent gattServiceIntent=new Intent(GuideActivity.this,BLEService.class);
-        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
+//        Intent gattServiceIntent=new Intent(GuideActivity.this,BLEService.class);
+//        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
 
     }
 
-    private final ServiceConnection mServiceConnection = new ServiceConnection()
-    {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service)
-        {
-            Log.d(TAG, "start service Connection");
-
-            mBluetoothLeService = ((BLEService.LocalBinder) service).getService();
-
-            //从搜索出来的services里面找出合适的service
-            List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
-            mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-            mCharacteristic.setValue("123");
-            mBluetoothLeService.writeCharacteristic(mCharacteristic);
-//            //
-//            if( null != mCharacteristic )
-//            {
-                mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
-//                InputStream inputStream = buildSendData();
-//                inputStreamArrayList.add(inputStream);
-//                byte[] writeBytes = new byte[11];
-//                int byteCount = 0;
-//                try
-//                {
-//                    byteCount = inputStream.read(writeBytes,0,11);
-//                    if( byteCount > 0)
-//                    {
-//                        mCharacteristic.setValue(writeBytes);
-//                        mBluetoothLeService.writeCharacteristic(mCharacteristic);
-//                    }
-//                }
-//                catch (IOException e)
-//                {
-//                    e.printStackTrace();
-//                }
-//            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName)
-        {
-            Log.d(TAG, "end Service Connection");
-            mBluetoothLeService = null;
-        }
-    };
-
-
-    private static IntentFilter buildGattUpdateIntentFilter()
-    {
-        final IntentFilter intentFilter = new IntentFilter();
-
-        intentFilter.addAction(BLEService.ACTION_DATA_WRITE);
-
-        return intentFilter;
-    }
-
-
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver()
-    {
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-//            Log.d(TAG, "enter BroadcastReceiver");
-//            final String action = intent.getAction();
-//            Log.d(TAG, "action = " + action);
-//            if (BLEService.ACTION_DATA_WRITE.equals(action))
-//            {
-//                Log.d(TAG, "receive data");
-//                if( inputStreamArrayList.size() != 0)
-//                {
-//                    InputStream writeStream = inputStreamArrayList.get(0);
-//                    byte[] readBytes = new byte[11];
-//                    try
-//                    {
-//                        int byteCount = writeStream.read(readBytes, 0, 11);
-//                        if (byteCount > 0)
-//                        {
-//                            mCharacteristic.setValue(readBytes);
-//                            mBluetoothLeService.writeCharacteristic(mCharacteristic);
-//                            return;
-//                        }
-//                        else
-//                        {
-//                            inputStreamArrayList.remove(0);
-//                            Log.d(TAG, "finish send stream!");
-//                        }
-//                    }
-//                    catch (IOException e)
-//                    {
-//                        e.printStackTrace();
-//                    }
-//                }
+//    private final ServiceConnection mServiceConnection = new ServiceConnection()
+//    {
 //
-//                if (inputStreamArrayList.size() == 0)
-//                {
-//                    InputStream inputStream = buildSendData();
-//                    inputStreamArrayList.add(inputStream);
-//                    byte[] writeBytes = new byte[11];
-//                    int byteCount = 0;
-//                    try
-//                    {
-//                        byteCount = inputStream.read(writeBytes,0,11);
-//                        if( byteCount > 0)
-//                        {
-//                            mCharacteristic.setValue(writeBytes);
-//                            mBluetoothLeService.writeCharacteristic(mCharacteristic);
-//                        }
-//                    }
-//                    catch (IOException e)
-//                    {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-        }
-    };
+//        @Override
+//        public void onServiceConnected(ComponentName componentName, IBinder service)
+//        {
+//            Log.d(TAG, "start service Connection");
+//
+//            mBluetoothLeService = ((BLEService.LocalBinder) service).getService();
+//
+//            //从搜索出来的services里面找出合适的service
+//            List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
+//            mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
+//            mCharacteristic.setValue("123");
+//            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+////            //
+////            if( null != mCharacteristic )
+////            {
+//                mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
+////                InputStream inputStream = buildSendData();
+////                inputStreamArrayList.add(inputStream);
+////                byte[] writeBytes = new byte[11];
+////                int byteCount = 0;
+////                try
+////                {
+////                    byteCount = inputStream.read(writeBytes,0,11);
+////                    if( byteCount > 0)
+////                    {
+////                        mCharacteristic.setValue(writeBytes);
+////                        mBluetoothLeService.writeCharacteristic(mCharacteristic);
+////                    }
+////                }
+////                catch (IOException e)
+////                {
+////                    e.printStackTrace();
+////                }
+////            }
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName componentName)
+//        {
+//            Log.d(TAG, "end Service Connection");
+//            mBluetoothLeService = null;
+//        }
+//    };
+//
+//
+//    private static IntentFilter buildGattUpdateIntentFilter()
+//    {
+//        final IntentFilter intentFilter = new IntentFilter();
+//
+//        intentFilter.addAction(BLEService.ACTION_DATA_WRITE);
+//
+//        return intentFilter;
+//    }
+//
+//
+//    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver()
+//    {
+//        @Override
+//        public void onReceive(Context context, Intent intent)
+//        {
+////            Log.d(TAG, "enter BroadcastReceiver");
+////            final String action = intent.getAction();
+////            Log.d(TAG, "action = " + action);
+////            if (BLEService.ACTION_DATA_WRITE.equals(action))
+////            {
+////                Log.d(TAG, "receive data");
+////                if( inputStreamArrayList.size() != 0)
+////                {
+////                    InputStream writeStream = inputStreamArrayList.get(0);
+////                    byte[] readBytes = new byte[11];
+////                    try
+////                    {
+////                        int byteCount = writeStream.read(readBytes, 0, 11);
+////                        if (byteCount > 0)
+////                        {
+////                            mCharacteristic.setValue(readBytes);
+////                            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+////                            return;
+////                        }
+////                        else
+////                        {
+////                            inputStreamArrayList.remove(0);
+////                            Log.d(TAG, "finish send stream!");
+////                        }
+////                    }
+////                    catch (IOException e)
+////                    {
+////                        e.printStackTrace();
+////                    }
+////                }
+////
+////                if (inputStreamArrayList.size() == 0)
+////                {
+////                    InputStream inputStream = buildSendData();
+////                    inputStreamArrayList.add(inputStream);
+////                    byte[] writeBytes = new byte[11];
+////                    int byteCount = 0;
+////                    try
+////                    {
+////                        byteCount = inputStream.read(writeBytes,0,11);
+////                        if( byteCount > 0)
+////                        {
+////                            mCharacteristic.setValue(writeBytes);
+////                            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+////                        }
+////                    }
+////                    catch (IOException e)
+////                    {
+////                        e.printStackTrace();
+////                    }
+////                }
+////            }
+//        }
+//    };
     @Override
     public void onInitNaviSuccess() {
         mAMapNavi.calculateWalkRoute(mStartLatlng,mEndLatLng);

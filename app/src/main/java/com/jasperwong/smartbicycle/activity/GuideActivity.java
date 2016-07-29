@@ -15,7 +15,10 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.LocationSource;
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
 import com.amap.api.navi.AMapNaviView;
@@ -75,6 +78,7 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
         mAMapNaviView = (AMapNaviView) findViewById(R.id.navi_view);
         mAMapNaviView.onCreate(savedInstanceState);
         mAMapNaviView.setAMapNaviViewListener(this);
+
         Intent intent =this.getIntent();
         EndLat=intent.getStringExtra("EndLat");
         EndLng=intent.getStringExtra("EndLng");
@@ -97,11 +101,10 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
             //从搜索出来的services里面找出合适的service
             List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-            mCharacteristic.setValue('g'+"");
-            mBluetoothLeService.writeCharacteristic(mCharacteristic);
-    //            //
             if( null != mCharacteristic )
             {
+                mCharacteristic.setValue('g'+"");
+                mBluetoothLeService.writeCharacteristic(mCharacteristic);
                 mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
             }
             mAMapNavi.startNavi(AMapNavi.EmulatorNaviMode);
@@ -138,6 +141,9 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
             mCharacteristic.setValue(naviInfo.m_Icon + "");
             mBluetoothLeService.writeCharacteristic(mCharacteristic);
         }
+        Log.d("navi","当前路段剩余距离:"+naviInfo.getCurStepRetainDistance());
+        Log.d("navi","当前路名:"+naviInfo.getCurrentRoadName());
+        Log.d("navi","下一路名:"+naviInfo.getNextRoadName());
     }
 
     @Override

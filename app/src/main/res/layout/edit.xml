@@ -28,7 +28,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/determinationET"
         android:layout_below="@+id/determination"
-        android:layout_marginTop="0dp"/>
+        android:layout_marginTop="0dp"
+        android:text="广州塔"/>
     <!--<Button-->
         <!--android:layout_width="30dp"-->
         <!--android:layout_height="30dp"-->

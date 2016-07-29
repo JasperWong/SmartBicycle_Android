@@ -1,6 +1,9 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
  import android.support.design.widget.NavigationView;
@@ -11,8 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasperwong.smartbicycle.R;
+import com.jasperwong.smartbicycle.service.FrontService;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -29,6 +34,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     private TextView dayShow;
+    private Intent serviceIntent;
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
 
@@ -59,6 +65,9 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         widget.setDynamicHeightEnabled(true);
         widget.setTileHeightDp(35);
         widget.setTopbarVisible(false);
+        serviceIntent=new Intent(this, FrontService.class);
+        startService(serviceIntent);
+        registerReceiver(broadcastReceiver, new IntentFilter(FrontService.TAG));
 //        textView.setText(getSelectedDatesString());
     }
 
@@ -69,8 +78,12 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         }
         return FORMATTER.format(date.getDate());
     }
-
-
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        stopService(serviceIntent);
+    }
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -103,7 +116,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_login) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -136,7 +149,14 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(UserActivity.this, "关闭程序", Toast.LENGTH_LONG).show();
+            BaseActivity.ActivityCollector.finishAll();
+            stopService(serviceIntent);
+        }
+    };
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 //        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));

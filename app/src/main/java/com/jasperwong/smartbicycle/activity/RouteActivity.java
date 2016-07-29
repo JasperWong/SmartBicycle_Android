@@ -80,10 +80,7 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
     }
 
 
-    private void openGPS(){
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivityForResult(intent,0);
-    }
+
 
     private void init() {
         if (aMap == null) {

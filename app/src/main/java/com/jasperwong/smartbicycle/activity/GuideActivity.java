@@ -128,7 +128,7 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
         mAMapNavi = AMapNavi.getInstance(getApplicationContext());
         mAMapNavi.addAMapNaviListener(this);
         mAMapNavi.addAMapNaviListener(mTtsManager);
-        mAMapNavi.setEmulatorNaviSpeed(1000);
+        mAMapNavi.setEmulatorNaviSpeed(900);
     }
 
     @Override

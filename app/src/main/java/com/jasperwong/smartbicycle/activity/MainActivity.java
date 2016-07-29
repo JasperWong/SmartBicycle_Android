@@ -11,8 +11,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -39,7 +41,6 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
-    private Intent serviceIntent;
     private ProgressDialog progDialog = null;
     private boolean mConnected = false;
     private TextView mDataField;
@@ -78,16 +79,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        registerReceiver(broadcastReceiver, new IntentFilter(FrontService.TAG));
-
-        serviceIntent=new Intent(this, FrontService.class);
-        startService(serviceIntent);
-
 //        final Intent intent = getIntent();
 //        mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
 //        mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
-        initBLE();
+        InitBLE();
+        InitGPS(this);
 
         mListView=(ListView)findViewById(R.id.list_device);
         mDeviceAdapter=new DeviceAdapter(this);
@@ -117,7 +114,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         startScan();
     }
 
-    private void initBLE(){
+    private void InitBLE(){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "本机没有找到蓝牙硬件或驱动！", Toast.LENGTH_SHORT).show();
@@ -129,6 +126,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             startActivityForResult(mIntent, 1);
         }
     }
+
+    private void InitGPS(final Context context){
+        Toast.makeText(this,"请手动打开位置信息,否则无法使用",Toast.LENGTH_LONG).show();
+        LocationManager locationManager
+                = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
+        boolean isOn = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if(!isOn){
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivityForResult(intent,0);
+        }
+    }
+
     private void showProgressDialog() {
         if (progDialog == null){
             progDialog = new ProgressDialog(this);
@@ -164,7 +174,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        stopService(serviceIntent);
         unbindService(mServiceConnection);
         mBluetoothLeService.disconnect();
         mBluetoothLeService.close();
@@ -324,14 +333,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(MainActivity.this, "关闭程序", Toast.LENGTH_LONG).show();
-            BaseActivity.ActivityCollector.finishAll();
-            stopService(serviceIntent);
-        }
-    };
+
 
     public boolean startScan() {
         if(null == mBluetoothAdapter)

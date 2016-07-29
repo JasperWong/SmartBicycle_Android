@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothGattService;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -44,9 +45,8 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        Intent gattServiceIntent=new Intent(SwitchActivity.this,BLEService.class);
-        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
+//        Intent gattServiceIntent=new Intent(SwitchActivity.this,BLEService.class);
+//        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
         button=(Button)findViewById(R.id.button);
         button.setOnClickListener(this);
 
@@ -145,7 +145,12 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         int id=v.getId();
         switch (id) {
             case R.id.button:
-                mBluetoothLeService.writeCharacteristic(mCharacteristic);
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("tel:123"));
+                startActivity(intent);
+
+
         }
     }
 

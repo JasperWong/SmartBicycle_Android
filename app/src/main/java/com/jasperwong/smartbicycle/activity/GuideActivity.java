@@ -97,14 +97,13 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
             Log.d(TAG, "start service Connection");
 
             mBluetoothLeService = ((BLEService.LocalBinder) service).getService();
-
             //从搜索出来的services里面找出合适的service
             List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
             if( null != mCharacteristic )
             {
-                mCharacteristic.setValue('g'+"");
-                mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//                mCharacteristic.setValue('g'+"");
+//                mBluetoothLeService.writeCharacteristic(mCharacteristic);
                 mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
             }
             mAMapNavi.startNavi(AMapNavi.EmulatorNaviMode);

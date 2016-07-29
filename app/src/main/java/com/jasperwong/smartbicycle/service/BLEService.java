@@ -66,11 +66,12 @@ public class BLEService extends Service
             "com.example.bluetooth.le.ACTION_GATT_RSSI";
     public final static String ACTION_DATA_AVAILABLE =
             "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
+    public final static String ACTION_DATA_READ =
+            "com.example.bluetooth.le.ACTION_DATA_READ";
     public final static String EXTRA_DATA =
             "com.example.bluetooth.le.EXTRA_DATA";
     public final static String ACTION_DATA_WRITE =
             "com.example.bluetooth.le.EXTRA_DATA";
-
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
@@ -139,13 +140,12 @@ public class BLEService extends Service
         }
 
         @Override
-        public void onCharacteristicRead(BluetoothGatt gatt,
-                                         BluetoothGattCharacteristic characteristic,
-                                         int status)
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
         {
+            Log.d("action","onRec");
             if (status == BluetoothGatt.GATT_SUCCESS)
             {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+                broadcastUpdate(ACTION_DATA_READ, characteristic);
             }
             else
             {
@@ -156,6 +156,7 @@ public class BLEService extends Service
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
         {
+            Log.d("action123","onWrite");
             if (status == BluetoothGatt.GATT_SUCCESS)
             {
                 broadcastUpdate(ACTION_DATA_WRITE, characteristic);
@@ -167,9 +168,9 @@ public class BLEService extends Service
         }
 
         @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt,
-                                            BluetoothGattCharacteristic characteristic)
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
         {
+            Log.d("action123","onChange");
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };
@@ -191,9 +192,8 @@ public class BLEService extends Service
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic)
     {
         final Intent intent = new Intent(action);
-
         final byte[] data = characteristic.getValue();
-        Log.d("usart",data+"");
+//        Log.d("usart",data+"");
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
 //            for(byte byteChar : data)

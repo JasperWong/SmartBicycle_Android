@@ -72,6 +72,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private onScanDeviceListener mOnScanDeviceListener;
 
+    BluetoothGattCharacteristic mCharacteristic=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +100,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 ConnectedState=mBluetoothLeService.connect(BleDevice.getAddress());
             }
         });
-
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -110,8 +112,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mState=(MenuItem)drawer.findViewById(R.id.nav_guide);
         Intent gattServiceIntent = new Intent(this, BLEService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
         startScan();
+
     }
 
     private void InitBLE(){
@@ -158,8 +160,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onResume(){
         super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
+//        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if(mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
@@ -189,8 +191,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 Log.e(TAG, "Unable to initialize Bluetooth");
                 finish();
             }
+            List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
+            mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
+            if( null != mCharacteristic )
+            {
+//                mCharacteristic.setValue('g'+"");
+//                mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//                mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
+            }
+//            mBluetoothLeService.setCharacteristicNotification(mCharacteristic,true);
             // Automatically connects to the device upon successful start-up initialization.
-            mBluetoothLeService.connect(mDeviceAddress);
+//            mBluetoothLeService.connect(mDeviceAddress);
         }
 
         @Override
@@ -206,34 +217,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if (BLEService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 Toast.makeText(MainActivity.this,"连接成功",Toast.LENGTH_LONG).show();
-//                updateConnectionState(R.string.connected);
-//                invalidateOptionsMenu();
-//                List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
-//                BluetoothGattCharacteristic characteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-//                characteristic.setValue("");
                 Intent intent1=new Intent(MainActivity.this,RouteActivity.class);
                 startActivity(intent1);
 
             }  else if (BLEService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-                // Show all the supported services and characteristics on the user interface.
-                // Error
+                List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
+                BluetoothGattCharacteristic mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
+                mCharacteristic.setValue("g");
+                mBluetoothLeService.writeCharacteristic(mCharacteristic);
+                mBluetoothLeService.setCharacteristicNotification(mCharacteristic,true);
+
             }   else if(BLEService.ACTION_DATA_WRITE.equals(action)){
                 Log.d("test","write");
-                List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
-                BluetoothGattCharacteristic characteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-//                characteristic.setValue("123");
-//                mBluetoothLeService.writeCharacteristic(characteristic);
 //                mBluetoothGatt.readRemoteRssi();
 
             } else if (BLEService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
-//                updateConnectionState(R.string.disconnected);
                 Toast.makeText(MainActivity.this,"断开连接",Toast.LENGTH_LONG).show();
-//                invalidateOptionsMenu();
-//                clearUI();
             } else if (BLEService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Log.d("re123",intent.getStringExtra(BLEService.EXTRA_DATA));
-//                displayData(intent.getStringExtra(BLEService.EXTRA_DATA));
+                String Rx=intent.getStringExtra(BLEService.EXTRA_DATA);
+                Log.d("Rx","Rx:"+Rx);
+            }else if(BLEService.ACTION_DATA_READ.equals(action)){
+
             }
         }
     };
@@ -254,6 +259,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         intentFilter.addAction(BLEService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BLEService.ACTION_DATA_AVAILABLE);
         intentFilter.addAction(BLEService.ACTION_DATA_WRITE);
+        intentFilter.addAction(BLEService.ACTION_DATA_READ);
         return intentFilter;
     }
 

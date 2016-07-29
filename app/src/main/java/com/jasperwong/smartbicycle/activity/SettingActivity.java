@@ -33,9 +33,8 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mEditDialogFrament=new EditDialogFragment();
-        FragmentManager fragmentManager=getFragmentManager();
-        mEditDialogFrament.show(getFragmentManager(),"test");
+
+
     }
 
     @Override

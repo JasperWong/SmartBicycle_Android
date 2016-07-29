@@ -97,7 +97,7 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
             //从搜索出来的services里面找出合适的service
             List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-            mCharacteristic.setValue("123");
+            mCharacteristic.setValue('g'+"");
             mBluetoothLeService.writeCharacteristic(mCharacteristic);
     //            //
             if( null != mCharacteristic )

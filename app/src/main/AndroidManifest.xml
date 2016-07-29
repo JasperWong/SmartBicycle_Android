@@ -33,10 +33,6 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.SwitchActivity"
@@ -62,13 +58,18 @@
             android:name=".activity.UserActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="f8206bf14753854669b643569292e1b5" />
+            android:value="79a0cfaacbd7b8f559e046c83cc63947" />
         <!-- android:value="ed10638af173a56439c6c47f004d0b2e" -->
 
+        <!--f8206bf14753854669b643569292e1b5-->LAB
         <service
             android:name="com.amap.api.location.APSService"
             android:enabled="true" />

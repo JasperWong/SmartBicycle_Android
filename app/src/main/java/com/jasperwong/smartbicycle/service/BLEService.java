@@ -193,11 +193,13 @@ public class BLEService extends Service
         final Intent intent = new Intent(action);
 
         final byte[] data = characteristic.getValue();
+        Log.d("usart",data+"");
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
 //            for(byte byteChar : data)
 //                stringBuilder.append(String.format("%02X ", byteChar));
             intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+            Log.d("usart",new String(data));
         }
         sendBroadcast(intent);
     }

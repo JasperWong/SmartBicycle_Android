@@ -76,7 +76,6 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
         navigationView.setNavigationItemSelectedListener(this);
         mMapView = (MapView) findViewById(R.id.aMap);
         mMapView.onCreate(savedInstanceState);
-        init();
 //        openGPS();
     }
 
@@ -217,6 +216,8 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
     protected void onResume(){
         super.onResume();
         mMapView.onResume();
+        init();
+        activate(mListener);
         Log.d("test_info","onResume");
     }
 

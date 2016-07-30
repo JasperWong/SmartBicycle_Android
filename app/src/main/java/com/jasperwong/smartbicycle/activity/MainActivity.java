@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -130,12 +131,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void InitGPS(final Context context){
-        Toast.makeText(this,"请手动打开位置信息,否则无法使用",Toast.LENGTH_LONG).show();
         LocationManager locationManager
                 = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
         boolean isOn = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if(!isOn){
+            Toast.makeText(this,"请手动打开位置信息,否则无法使用",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivityForResult(intent,0);
         }
@@ -223,7 +224,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }  else if (BLEService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
                 BluetoothGattCharacteristic mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-                mCharacteristic.setValue("g");
+                mCharacteristic.setValue("G");
                 mBluetoothLeService.writeCharacteristic(mCharacteristic);
                 mBluetoothLeService.setCharacteristicNotification(mCharacteristic,true);
 

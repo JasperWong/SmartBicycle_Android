@@ -149,8 +149,6 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setData(Uri.parse("tel:123"));
                 startActivity(intent);
-
-
         }
     }
 

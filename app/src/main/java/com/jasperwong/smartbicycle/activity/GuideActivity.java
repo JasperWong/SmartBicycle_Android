@@ -137,9 +137,10 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
     public void onNaviInfoUpdate(NaviInfo naviInfo) {
         Log.d("test_info", "前方 " + dirActions[naviInfo.m_Icon]);
         if(mCharacteristic!=null) {
-            mCharacteristic.setValue(naviInfo.m_Icon + "");
+            mCharacteristic.setValue("g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
             mBluetoothLeService.writeCharacteristic(mCharacteristic);
         }
+        Log.d("navi","g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
         Log.d("navi","当前路段剩余距离:"+naviInfo.getCurStepRetainDistance());
         Log.d("navi","当前路名:"+naviInfo.getCurrentRoadName());
         Log.d("navi","下一路名:"+naviInfo.getNextRoadName());

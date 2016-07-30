@@ -28,6 +28,7 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -199,6 +200,13 @@ public class BLEService extends Service
 //            for(byte byteChar : data)
 //                stringBuilder.append(String.format("%02X ", byteChar));
             intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+            String string=new String("ring");
+            if(new String(data).equals(string)){
+                Intent intentCall = new Intent(Intent.ACTION_CALL);
+                intentCall.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intentCall.setData(Uri.parse("tel:123"));
+                startActivity(intentCall);
+            }
             Log.d("usart",new String(data));
         }
         sendBroadcast(intent);

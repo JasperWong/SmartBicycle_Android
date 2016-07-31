@@ -24,6 +24,7 @@ import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
 import com.jasperwong.smartbicycle.service.BLEService;
 
+import java.io.InputStream;
 import java.util.List;
 
 public class SwitchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
@@ -49,6 +50,8 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
 //        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
         button=(Button)findViewById(R.id.button);
         button.setOnClickListener(this);
+        List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
+        mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
 
     }
 
@@ -64,7 +67,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             //从搜索出来的services里面找出合适的service
             List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-//            mCharacteristic.setValue("123");
+//            mCharacteristic.setValue("吴彦祖");
 //            mBluetoothLeService.writeCharacteristic(mCharacteristic);
 //            mBluetoothLeService.readCharacteristic(mCharacteristic);
 //            //
@@ -145,10 +148,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         int id=v.getId();
         switch (id) {
             case R.id.button:
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setData(Uri.parse("tel:123"));
-                startActivity(intent);
+            mBluetoothLeService.writeCharacteristic(mCharacteristic);
         }
     }
 

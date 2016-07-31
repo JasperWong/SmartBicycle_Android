@@ -225,6 +225,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
                 BluetoothGattCharacteristic mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
                 mCharacteristic.setValue("G");
+//
+//                mCharacteristic.setValue("啊啊啊啊啊");
                 mBluetoothLeService.writeCharacteristic(mCharacteristic);
                 mBluetoothLeService.setCharacteristicNotification(mCharacteristic,true);
 

@@ -43,6 +43,7 @@ import com.jasperwong.smartbicycle.util.TTSController;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,8 +103,8 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
             if( null != mCharacteristic )
             {
-//                mCharacteristic.setValue('g'+"");
-//                mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//                mCharacteristic.setValue("G");
+                mBluetoothLeService.writeCharacteristic(mCharacteristic);
                 mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
             }
             mAMapNavi.startNavi(AMapNavi.EmulatorNaviMode);
@@ -137,6 +138,10 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
     public void onNaviInfoUpdate(NaviInfo naviInfo) {
         Log.d("test_info", "前方 " + dirActions[naviInfo.m_Icon]);
         if(mCharacteristic!=null) {
+//            String str_utf8="啊";
+//            String str_gb2312=null;
+//            str_gb2312=utf8Togb2312(str_utf8);
+//            mCharacteristic.setValue(str_utf8);
             mCharacteristic.setValue("g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
             mBluetoothLeService.writeCharacteristic(mCharacteristic);
         }

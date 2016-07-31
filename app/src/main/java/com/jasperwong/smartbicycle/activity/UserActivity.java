@@ -23,6 +23,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -37,6 +38,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     private Intent serviceIntent;
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
+    private TextView dayKmTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         setSupportActionBar(toolbar);
 
         dayShow=(TextView)findViewById(R.id.dayTV);
+        dayKmTV=(TextView)findViewById(R.id.dayKmTV);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -89,6 +92,10 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         //If you change a decorate, you need to invalidate decorators
         dayShow.setText(FORMATTER.format(date.getDate()));
+        float num =(float)(Math.random() * 3);
+        BigDecimal   b  =   new BigDecimal(num);
+        num=b.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+        dayKmTV.setText(getSelectedDatesString().valueOf(num));
     }
 
     @Override

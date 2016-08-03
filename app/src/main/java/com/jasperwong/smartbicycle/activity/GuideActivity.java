@@ -138,17 +138,21 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
     public void onNaviInfoUpdate(NaviInfo naviInfo) {
         Log.d("test_info", "前方 " + dirActions[naviInfo.m_Icon]);
         if(mCharacteristic!=null) {
-//            String str_utf8="啊";
-//            String str_gb2312=null;
-//            str_gb2312=utf8Togb2312(str_utf8);
-//            mCharacteristic.setValue(str_utf8);
-            mCharacteristic.setValue("g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
+            String str_utf8="啊啊";
+            String str_gb2312= null;
+            try {
+                str_gb2312 = new String(str_utf8.getBytes("GB2312"),"GB2312");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            mCharacteristic.setValue("\r\n"+str_gb2312+"\r\n");
+//            mCharacteristic.setValue("g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
             mBluetoothLeService.writeCharacteristic(mCharacteristic);
         }
-        Log.d("navi","g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
-        Log.d("navi","当前路段剩余距离:"+naviInfo.getCurStepRetainDistance());
-        Log.d("navi","当前路名:"+naviInfo.getCurrentRoadName());
-        Log.d("navi","下一路名:"+naviInfo.getNextRoadName());
+//        Log.d("navi","g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
+//        Log.d("navi","当前路段剩余距离:"+naviInfo.getCurStepRetainDistance());
+//        Log.d("navi","当前路名:"+naviInfo.getCurrentRoadName());
+//        Log.d("navi","下一路名:"+naviInfo.getNextRoadName());
     }
 
     @Override

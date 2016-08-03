@@ -113,8 +113,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mState=(MenuItem)drawer.findViewById(R.id.nav_guide);
         Intent gattServiceIntent = new Intent(this, BLEService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-        startScan();
-
     }
 
     private void InitBLE(){
@@ -225,14 +223,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
                 BluetoothGattCharacteristic mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
                 mCharacteristic.setValue("G");
-//
-//                mCharacteristic.setValue("啊啊啊啊啊");
                 mBluetoothLeService.writeCharacteristic(mCharacteristic);
                 mBluetoothLeService.setCharacteristicNotification(mCharacteristic,true);
 
             }   else if(BLEService.ACTION_DATA_WRITE.equals(action)){
                 Log.d("test","write");
-//                mBluetoothGatt.readRemoteRssi();
 
             } else if (BLEService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
@@ -245,15 +240,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
     };
-
-//    private void updateConnectionState(final int resourceId) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                mConnectionState.setText(resourceId);
-//            }
-//        });
-//    }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();

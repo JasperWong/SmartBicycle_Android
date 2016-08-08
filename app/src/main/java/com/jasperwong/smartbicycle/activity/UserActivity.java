@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
  import android.support.design.widget.NavigationView;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasperwong.smartbicycle.R;
+import com.jasperwong.smartbicycle.mysql.MyDatabaseHelper;
 import com.jasperwong.smartbicycle.service.FrontService;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -39,6 +41,13 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
     private TextView dayKmTV;
+    private SharedPreferences.Editor TotalRecord;
+    private float TotalDistance;
+    private int TotalHour;
+    private int TotalTimes;
+    private float SelectDateRecord;
+    private String SelectDate;
+    private MyDatabaseHelper myDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +80,20 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         serviceIntent=new Intent(this, FrontService.class);
         startService(serviceIntent);
         registerReceiver(broadcastReceiver, new IntentFilter(FrontService.TAG));
-//        textView.setText(getSelectedDatesString());
+        TotalRecord = getPreferences(MODE_PRIVATE).edit();
+        myDatabaseHelper=new MyDatabaseHelper(this,"DateRecord.db",null,1);
+        myDatabaseHelper.getWritableDatabase();
     }
+
+    private void UpdateRecord(){
+        TotalRecord.putFloat("distance", TotalDistance);
+        TotalRecord.putInt("hour",TotalHour);
+        TotalRecord.putInt("times", TotalTimes);
+        TotalRecord.commit();
+
+
+    }
+
 
     private String getSelectedDatesString() {
         CalendarDay date = widget.getSelectedDate();

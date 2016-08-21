@@ -1,9 +1,11 @@
 package com.jasperwong.smartbicycle.activity;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
  import android.support.design.widget.NavigationView;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.service.FrontService;
+import com.jasperwong.smartbicycle.sqlite.MyDatabaseHelper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -36,10 +39,11 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     private TextView dayShow;
     private Intent serviceIntent;
+
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
     private TextView dayKmTV;
-
+    private MyDatabaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,16 +66,15 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
-//        widget.setTopbarVisible(false);
-//        widget.set
         //Setup initial text
         widget.setDynamicHeightEnabled(true);
         widget.setTileHeightDp(35);
         widget.setTopbarVisible(false);
+        dbHelper = new MyDatabaseHelper(this, "test.db", null, 1);
+        dbHelper.getWritableDatabase();
         serviceIntent=new Intent(this, FrontService.class);
         startService(serviceIntent);
         registerReceiver(broadcastReceiver, new IntentFilter(FrontService.TAG));
-//        textView.setText(getSelectedDatesString());
     }
 
     private String getSelectedDatesString() {
@@ -125,6 +128,17 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_login) {
             return true;
+        }   else if(id==R.id.action_update){
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            // 开始组装第一条数据
+            values.put("username", "JasperWong");
+            values.put("date", "2016年8月20日");
+            values.put("distanceDay", 12.11);
+            values.put("distanceTotal", 13.22);
+            values.put("hourTotal",55.1);
+            values.put("timesTotal",1123);
+            db.replace("USER", null, values); // 插入第一条数据
         }
         return super.onOptionsItemSelected(item);
     }

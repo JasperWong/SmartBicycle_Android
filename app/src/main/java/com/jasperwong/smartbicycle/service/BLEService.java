@@ -44,6 +44,7 @@ import java.util.UUID;
 
 public class BLEService extends Service
 {
+    private byte []recData;
     private final static String TAG = BLEService.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
@@ -194,6 +195,7 @@ public class BLEService extends Service
     {
         final Intent intent = new Intent(action);
         final byte[] data = characteristic.getValue();
+        recData=data;
 //        Log.d("usart",data+"");
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
@@ -207,6 +209,7 @@ public class BLEService extends Service
                 intentCall.setData(Uri.parse("tel:123"));
                 startActivity(intentCall);
             }
+
             Log.d("usart",new String(data));
         }
         sendBroadcast(intent);

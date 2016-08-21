@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,7 +25,13 @@ import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
 import com.jasperwong.smartbicycle.service.BLEService;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class SwitchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
@@ -50,8 +57,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
 //        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
         button=(Button)findViewById(R.id.button);
         button.setOnClickListener(this);
-        List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
-        mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
+
 
     }
 
@@ -142,13 +148,55 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             super.onBackPressed();
         }
     }
+    private void sendRequestWithHttpURLConnection() {
+        // 开启线程来发起网络请求
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection connection = null;
+                try {
+                    URL url = new URL("http://jasperwong.cn:8082/SmartBicycle_Server/user/insert?username=JasperWong&" +
+                            "date=2016年8月25日&distanceDay=22.12&" +
+                            "distanceTotal=12.1&HourTotal=12&timesTotal=13");
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(8000);
+                    connection.setReadTimeout(8000);
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    InputStream in = connection.getInputStream();
+                    // 下面对获取到的输入流进行读取
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(in));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+//                    Message message = new Message();
+//                    message.what = SHOW_RESPONSE;
+//                    // 将服务器返回的结果存放到Message中
+//                    message.obj = response.toString();
+//                    handler.sendMessage(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
 
     @Override
     public void onClick(View v) {
         int id=v.getId();
         switch (id) {
             case R.id.button:
-            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+//            mBluetoothLeService.writeCharacteristic(mCharacteristic);
+                sendRequestWithHttpURLConnection();
+
         }
     }
 

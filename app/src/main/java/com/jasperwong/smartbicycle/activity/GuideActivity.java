@@ -103,7 +103,7 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
             mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
             if( null != mCharacteristic )
             {
-//                mCharacteristic.setValue("G");
+                mCharacteristic.setValue("G");
                 mBluetoothLeService.writeCharacteristic(mCharacteristic);
                 mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
             }
@@ -145,8 +145,8 @@ public class GuideActivity extends Activity implements AMapNaviListener,AMapNavi
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            mCharacteristic.setValue("\r\n"+str_gb2312+"\r\n");
-//            mCharacteristic.setValue("g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
+//            mCharacteristic.setValue("\r\n"+str_gb2312+"\r\n");
+            mCharacteristic.setValue("g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");
             mBluetoothLeService.writeCharacteristic(mCharacteristic);
         }
 //        Log.d("navi","g"+naviInfo.m_Icon +" "+"d"+naviInfo.getCurStepRetainDistance()+" \n");

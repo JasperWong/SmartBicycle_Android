@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -26,7 +28,12 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -94,11 +101,15 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         //If you change a decorate, you need to invalidate decorators
-        dayShow.setText(FORMATTER.format(date.getDate()));
-        float num =(float)(Math.random() * 3);
-        BigDecimal   b  =   new BigDecimal(num);
-        num=b.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
-        dayKmTV.setText(getSelectedDatesString().valueOf(num));
+        String dateSelect=new String(FORMATTER.format(date.getDate()));
+        dayShow.setText(dateSelect);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor=db.query("USER",null,"date",new String[]{dateSelect},null,null,null,null);
+        float distanceDay=cursor.getFloat(cursor.getColumnIndex("date"));
+//        float num =(float)(Math.random() * 3);
+        BigDecimal  b  =   new BigDecimal(distanceDay);
+        distanceDay=b.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+        dayKmTV.setText(getSelectedDatesString().valueOf(distanceDay));
     }
 
     @Override
@@ -127,18 +138,45 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_login) {
-            return true;
+
+
+
+
+
         }   else if(id==R.id.action_update){
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            // 开始组装第一条数据
-            values.put("username", "JasperWong");
-            values.put("date", "2016年8月20日");
-            values.put("distanceDay", 12.11);
-            values.put("distanceTotal", 13.22);
-            values.put("hourTotal",55.1);
-            values.put("timesTotal",1123);
-            db.replace("USER", null, values); // 插入第一条数据
+            Cursor cursor=db.query("USER",null,null,null,null,null,null,null);
+            if(cursor.moveToFirst()){
+                do{
+                    String username=cursor.getString(cursor.getColumnIndex("username"));
+                    String date=cursor.getString(cursor.getColumnIndex("date"));
+                    float  distanceDay=cursor.getFloat(cursor.getColumnIndex("distanceDay"));
+                    float distanceTotal=cursor.getFloat(cursor.getColumnIndex("distanceTotal"));
+                    float hourTotal=cursor.getFloat(cursor.getColumnIndex("hourTotal"));
+                    int timesTotal=cursor.getInt(cursor.getColumnIndex("timesTotal"));
+                    final String url=new String(
+                            "http://jasperwong.cn:8082/SmartBicycle_Server/user/insert?"
+                            +"username="+username
+                            +"&date="+date
+                            +"&distanceDay="+distanceDay
+                            +"&distanceTotal="+distanceTotal
+                            +"&hourTotal="+hourTotal
+                            +"&timesTotal="+timesTotal
+                    );
+                    Log.d("test",url);
+                    sendRequestWithHttpURLConnection(url);
+                }while(cursor.moveToNext());
+                cursor.close();
+            }
+//            ContentValues values = new ContentValues();
+//            // 开始组装第一条数据
+//            values.put("username", "JasperWong");
+//            values.put("date", "2016年8月18日");
+//            values.put("distanceDay", 12.11);
+//            values.put("distanceTotal", 13.22);
+//            values.put("hourTotal",55.1);
+//            values.put("timesTotal",1123);
+//            db.replace("USER", null, values); // 插入第一条数据
         }
         return super.onOptionsItemSelected(item);
     }
@@ -182,4 +220,46 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 //        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
     }
+
+    private void sendRequestWithHttpURLConnection(final String urlConfig) {
+        // 开启线程来发起网络请求
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection connection = null;
+                try {
+                    URL url = new URL(new String(urlConfig));
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(8000);
+                    connection.setReadTimeout(8000);
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    InputStream in = connection.getInputStream();
+                    // 下面对获取到的输入流进行读取
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(in));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+//                    Message message = new Message();
+//                    message.what = SHOW_RESPONSE;
+//                    // 将服务器返回的结果存放到Message中
+//                    message.obj = response.toString();
+//                    handler.sendMessage(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
+
+
+
 }

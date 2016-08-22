@@ -97,7 +97,8 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         registerReceiver(broadcastReceiver, new IntentFilter(FrontService.TAG));
         saver = getSharedPreferences("data", MODE_PRIVATE).edit();
         loader= getSharedPreferences("data",MODE_PRIVATE);
-//        nameShow.setText(loader.getString("username",""));
+        nameShow.setText(loader.getString("username",""));
+        idShow.setText("ID:"+loader.getInt("id",0));
     }
 
     private String getSelectedDatesString() {
@@ -176,14 +177,15 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
             routeDialog.setPositiveButton("确定",new DialogInterface.OnClickListener(){
                 @Override
                 public void onClick(DialogInterface dialogInterface,int which){
-
+                    int id=(int)(Math.random() * 100000000);
+                    idShow.setText("ID:"+id);
                     saver.putString("username",usernameET.getText().toString());
 //                    Float height=Float.valueOf(heightET.getText().toString())
                     saver.putFloat("height",Float.parseFloat(heightET.getText().toString()));
-                    saver.putFloat("height",Float.valueOf(weightET.getText().toString()));
+                    saver.putFloat("weight",Float.valueOf(weightET.getText().toString()));
+                    saver.putInt("id",id);
                     saver.commit();
                     nameShow.setText(loader.getString("username",""));
-
 
                 }
             });

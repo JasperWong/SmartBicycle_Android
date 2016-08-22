@@ -67,9 +67,9 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="79a0cfaacbd7b8f559e046c83cc63947" />
+            android:value="f8206bf14753854669b643569292e1b5" />
         <!-- android:value="ed10638af173a56439c6c47f004d0b2e" -->
-
+        <!--"79a0cfaacbd7b8f559e046c83cc63947"--> surface
         <!--f8206bf14753854669b643569292e1b5-->LAB
         <service
             android:name="com.amap.api.location.APSService"

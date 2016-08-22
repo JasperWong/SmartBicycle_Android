@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="用户名"
+        android:text="用户名:"
         android:id="@+id/userNameShow"
         android:layout_below="@+id/info"
         android:layout_marginTop="16dp"
@@ -29,6 +29,7 @@
         android:id="@+id/UserNameInput"
         android:layout_below="@+id/info"
         android:layout_marginTop="0dp"
+        android:layout_toRightOf="@+id/userNameShow"
         android:text="JasperWong"/>
     <TextView
         android:layout_width="wrap_content"
@@ -42,24 +43,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/heightInput"
+        android:layout_toRightOf="@+id/heightShow"
         android:layout_below="@+id/UserNameInput"
         android:layout_marginTop="0dp"
+        android:hint="公斤"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="体重"
+        android:text="体重:"
         android:id="@+id/weightShow"
         android:layout_below="@+id/heightShow"
         android:layout_marginTop="16dp"
+
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/WeightInput"
+        android:id="@+id/weightInput"
         android:layout_below="@+id/heightShow"
+        android:layout_toRightOf="@+id/weightShow"
         android:layout_marginTop="0dp"
+        android:hint="米"
        />
     <!--<Button-->
         <!--android:layout_width="30dp"-->

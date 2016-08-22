@@ -1,10 +1,13 @@
 package com.jasperwong.smartbicycle.activity;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +51,18 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     private TextView dayShow;
     private Intent serviceIntent;
-
+    private EditText usernameET;
+    private EditText heightET;
+    private EditText weightET;
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
     private TextView dayKmTV;
     private MyDatabaseHelper dbHelper;
+    private SharedPreferences.Editor saver;
+    private SharedPreferences loader;
+    private TextView nameShow;
+    private TextView idShow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +72,8 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
         dayShow=(TextView)findViewById(R.id.dayTV);
         dayKmTV=(TextView)findViewById(R.id.dayKmTV);
-
+        nameShow=(TextView)findViewById(R.id.nameTV);
+        idShow=(TextView)findViewById(R.id.idTV);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -82,6 +95,9 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         serviceIntent=new Intent(this, FrontService.class);
         startService(serviceIntent);
         registerReceiver(broadcastReceiver, new IntentFilter(FrontService.TAG));
+        saver = getSharedPreferences("data", MODE_PRIVATE).edit();
+        loader= getSharedPreferences("data",MODE_PRIVATE);
+//        nameShow.setText(loader.getString("username",""));
     }
 
     private String getSelectedDatesString() {
@@ -100,16 +116,28 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        float distanceDay_real=0;
         //If you change a decorate, you need to invalidate decorators
         String dateSelect=new String(FORMATTER.format(date.getDate()));
         dayShow.setText(dateSelect);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor=db.query("USER",null,"date",new String[]{dateSelect},null,null,null,null);
-        float distanceDay=cursor.getFloat(cursor.getColumnIndex("date"));
+        Cursor cursor=db.query("USER",null,null,null,null,null,null,null);
+        if(cursor.moveToFirst()){
+            do {
+                String username = cursor.getString(cursor.getColumnIndex("username"));
+                String dateDB = cursor.getString(cursor.getColumnIndex("date"));
+                float distanceDay = cursor.getFloat(cursor.getColumnIndex("distanceDay"));
+                if (dateDB.equals(dateSelect)) {
+                    distanceDay_real=distanceDay;
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }
+    //        float distanceDay=cursor.getFloat(cursor.getColumnIndex("date"));
 //        float num =(float)(Math.random() * 3);
-        BigDecimal  b  =   new BigDecimal(distanceDay);
-        distanceDay=b.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
-        dayKmTV.setText(getSelectedDatesString().valueOf(distanceDay));
+        BigDecimal  b  =   new BigDecimal(distanceDay_real);
+        distanceDay_real=b.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+        dayKmTV.setText(getSelectedDatesString().valueOf(distanceDay_real));
     }
 
     @Override
@@ -138,10 +166,35 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_login) {
+            final AlertDialog.Builder routeDialog=new AlertDialog.Builder(this);
+            View edit= getLayoutInflater().inflate(R.layout.edit_user_info,null);
+            routeDialog.setCancelable(true);
+            routeDialog.setView(edit);
+            usernameET=(EditText)edit.findViewById(R.id.UserNameInput);
+            heightET=(EditText)edit.findViewById(R.id.heightInput) ;
+            weightET=(EditText)edit.findViewById(R.id.weightInput);
+            routeDialog.setPositiveButton("确定",new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialogInterface,int which){
+
+                    saver.putString("username",usernameET.getText().toString());
+//                    Float height=Float.valueOf(heightET.getText().toString())
+                    saver.putFloat("height",Float.parseFloat(heightET.getText().toString()));
+                    saver.putFloat("height",Float.valueOf(weightET.getText().toString()));
+                    saver.commit();
+                    nameShow.setText(loader.getString("username",""));
 
 
+                }
+            });
 
-
+            routeDialog.setNegativeButton("取消",new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialogInterface,int which){
+                    Log.d("route","cancel");
+                }
+            });
+            routeDialog.show();
 
         }   else if(id==R.id.action_update){
             SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -219,6 +272,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 //        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
+//        date.getMonth()
     }
 
     private void sendRequestWithHttpURLConnection(final String urlConfig) {

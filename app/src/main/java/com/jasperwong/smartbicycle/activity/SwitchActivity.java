@@ -4,8 +4,10 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.Message;
@@ -24,6 +26,7 @@ import android.widget.Button;
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
 import com.jasperwong.smartbicycle.service.BLEService;
+import com.jasperwong.smartbicycle.sqlite.MyDatabaseHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,6 +42,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private BLEService mBluetoothLeService=null;
     BluetoothGattCharacteristic mCharacteristic=null;
     Button button;
+    private MyDatabaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +61,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
 //        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
         button=(Button)findViewById(R.id.button);
         button.setOnClickListener(this);
-
+        dbHelper = new MyDatabaseHelper(this, "test.db", null, 1);
 
     }
 
@@ -194,8 +198,33 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         int id=v.getId();
         switch (id) {
             case R.id.button:
-//            mBluetoothLeService.writeCharacteristic(mCharacteristic);
-                sendRequestWithHttpURLConnection();
+
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            // 开始组装第一条数据
+            values.put("username", "JasperWong");
+            values.put("date", "2016年8月18日");
+            values.put("distanceDay", 12.11);
+            values.put("distanceTotal", 13.22);
+            values.put("hourTotal",55.1);
+            values.put("timesTotal",1123);
+            db.replace("USER", null, values); // 插入第一条数据
+            values.clear();
+                values.put("username", "JasperWong");
+                values.put("date", "2016年8月20日");
+                values.put("distanceDay", 12.11);
+                values.put("distanceTotal", 13.22);
+                values.put("hourTotal",55.1);
+                values.put("timesTotal",1123);
+                db.replace("USER", null, values); // 插入第一条数据
+                values.clear();
+                values.put("username", "JasperWong");
+                values.put("date", "2016年8月21日");
+                values.put("distanceDay", 12.11);
+                values.put("distanceTotal", 13.22);
+                values.put("hourTotal",55.1);
+                values.put("timesTotal",1123);
+                db.replace("USER", null, values); // 插入第一条数据
 
         }
     }

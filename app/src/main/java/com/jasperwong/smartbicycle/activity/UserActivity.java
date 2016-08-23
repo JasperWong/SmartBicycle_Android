@@ -57,11 +57,14 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
     private TextView dayKmTV;
+    private TextView totalTimesTV;
+    private TextView totalHoursTV;
     private MyDatabaseHelper dbHelper;
     private SharedPreferences.Editor saver;
     private SharedPreferences loader;
     private TextView nameShow;
     private TextView idShow;
+    private TextView distanceTotalTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +72,13 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_user);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_user);
         setSupportActionBar(toolbar);
-
+        totalTimesTV=(TextView)findViewById(R.id.timesTV);
+        totalHoursTV=(TextView)findViewById(R.id.hourTV);
         dayShow=(TextView)findViewById(R.id.dayTV);
         dayKmTV=(TextView)findViewById(R.id.dayKmTV);
         nameShow=(TextView)findViewById(R.id.nameTV);
         idShow=(TextView)findViewById(R.id.idTV);
+        distanceTotalTV=(TextView)findViewById(R.id.kmTV);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -99,6 +104,25 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         loader= getSharedPreferences("data",MODE_PRIVATE);
         nameShow.setText(loader.getString("username",""));
         idShow.setText("ID:"+loader.getInt("id",0));
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor=db.query("USER",null,null,null,null,null,null,null);
+        float distanceTotal =0;
+        float hour = 0;
+        float times=0;
+        if(cursor.moveToFirst()){
+            do {
+                String username = cursor.getString(cursor.getColumnIndex("username"));
+                distanceTotal = cursor.getFloat(cursor.getColumnIndex("distanceTotal"));
+                hour = cursor.getFloat(cursor.getColumnIndex("hourTotal"));
+                times= cursor.getInt(cursor.getColumnIndex("timesTotal"));
+                if (nameShow.getText().equals(username)) {
+                    totalTimesTV.setText(times+"");
+                    totalHoursTV.setText(hour+"");
+                    distanceTotalTV.setText(distanceTotal+"");
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }
     }
 
     private String getSelectedDatesString() {

@@ -202,28 +202,44 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             // 开始组装第一条数据
-            values.put("username", "JasperWong");
-            values.put("date", "2016年8月18日");
-            values.put("distanceDay", 12.11);
-            values.put("distanceTotal", 13.22);
-            values.put("hourTotal",55.1);
-            values.put("timesTotal",1123);
-            db.replace("USER", null, values); // 插入第一条数据
-            values.clear();
+                values.put("username", "JasperWong");
+                values.put("date", "2016年8月18日");
+                values.put("distanceDay", 3.11);
+                values.put("distanceTotal", 20.32);
+                values.put("hourTotal",13.5);
+                values.put("timesTotal",12);
+                db.replace("USER", null, values); // 插入第一条数据
+                values.clear();
+                values.put("username", "JasperWong");
+                values.put("date", "2016年8月19日");
+                values.put("distanceDay", 2.31);
+                values.put("distanceTotal", 20.32);
+                values.put("hourTotal",13.5);
+                values.put("timesTotal",12);
+                db.replace("USER", null, values); // 插入第一条数据
+                values.clear();
                 values.put("username", "JasperWong");
                 values.put("date", "2016年8月20日");
-                values.put("distanceDay", 12.11);
-                values.put("distanceTotal", 13.22);
-                values.put("hourTotal",55.1);
-                values.put("timesTotal",1123);
+                values.put("distanceDay", 2.11);
+                values.put("distanceTotal", 20.32);
+                values.put("hourTotal",13.5);
+                values.put("timesTotal",12);
                 db.replace("USER", null, values); // 插入第一条数据
                 values.clear();
                 values.put("username", "JasperWong");
                 values.put("date", "2016年8月21日");
+                values.put("distanceDay", 2.51);
+                values.put("distanceTotal", 20.32);
+                values.put("hourTotal",13.5);
+                values.put("timesTotal",12);
+                db.replace("USER", null, values); // 插入第一条数据
+                values.clear();
+                values.put("username", "JasperWong");
+                values.put("date", "2016年8月22日");
                 values.put("distanceDay", 12.11);
-                values.put("distanceTotal", 13.22);
-                values.put("hourTotal",55.1);
-                values.put("timesTotal",1123);
+                values.put("distanceTotal", 5.22);
+                values.put("hourTotal",13.5);
+                values.put("timesTotal",12);
                 db.replace("USER", null, values); // 插入第一条数据
 
         }

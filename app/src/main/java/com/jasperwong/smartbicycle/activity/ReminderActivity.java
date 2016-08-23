@@ -80,15 +80,16 @@ public class ReminderActivity extends AppCompatActivity {
 //        mtoDoTextTextView.setBackgroundColor(item.getTodoColor());
         mtoDoTextTextView.setText(mItem.getToDoText());
 
-        if(theme.equals(SettingActivity.LIGHTTHEME)){
-            mSnoozeTextView.setTextColor(getResources().getColor(R.color.secondary_text));
-        }
-        else{
-            mSnoozeTextView.setTextColor(Color.WHITE);
-            mSnoozeTextView.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_snooze_white_24dp,0,0,0
-            );
-        }
+        mSnoozeTextView.setTextColor(getResources().getColor(R.color.secondary_text));
+//        if(theme.equals(SettingActivity.LIGHTTHEME)){
+//            mSnoozeTextView.setTextColor(getResources().getColor(R.color.secondary_text));
+//        }
+//        else{
+//            mSnoozeTextView.setTextColor(Color.WHITE);
+//            mSnoozeTextView.setCompoundDrawablesWithIntrinsicBounds(
+//                    R.drawable.ic_snooze_white_24dp,0,0,0
+//            );
+//        }
 
         mRemoveToDoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +123,6 @@ public class ReminderActivity extends AppCompatActivity {
         editor.putBoolean(EXIT, true);
         editor.apply();
         startActivity(i);
-
     }
 
     @Override

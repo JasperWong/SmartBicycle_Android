@@ -54,7 +54,7 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
     private FloatingActionButton mAddToDoItemFAB;
     private ArrayList<ToDoItem> mToDoItemsArrayList;
     private CoordinatorLayout mCoordLayout;
-    public static final String TODOITEM = "com.jaseprwong.smartbicycle.com.jaseprwong.smartbicycle.SettingActivity";
+    public static final String TODOITEM = "com.jaseprwong.smartbicycle.SettingActivity";
     private BasicListAdapter adapter;
     private static final int REQUEST_ID_TODO_ITEM = 100;
     private ToDoItem mJustDeletedToDoItem;
@@ -395,17 +395,17 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
 //            }
             SharedPreferences sharedPreferences = getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE);
             //Background color for each to-do item. Necessary for night/day mode
-            int bgColor;
+            int bgColor=Color.WHITE;
             //color of title text in our to-do item. White for night mode, dark gray for day mode
-            int todoTextColor;
-            if(sharedPreferences.getString(THEME_SAVED, LIGHTTHEME).equals(LIGHTTHEME)){
-                bgColor = Color.WHITE;
-                todoTextColor = getResources().getColor(R.color.secondary_text);
-            }
-            else{
-                bgColor = Color.DKGRAY;
-                todoTextColor = Color.WHITE;
-            }
+            int todoTextColor=getResources().getColor(R.color.secondary_text);;
+//            if(sharedPreferences.getString(THEME_SAVED, LIGHTTHEME).equals(LIGHTTHEME)){
+//                bgColor = Color.WHITE;
+//                todoTextColor = getResources().getColor(R.color.secondary_text);
+//            }
+//            else{
+//                bgColor = Color.DKGRAY;
+//                todoTextColor = Color.WHITE;
+//            }
             holder.linearLayout.setBackgroundColor(bgColor);
 
             if(item.hasReminder() && item.getToDoDate()!=null){
@@ -504,6 +504,16 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            storeRetrieveData.saveToFile(mToDoItemsArrayList);
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -620,5 +630,10 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
 
     }
 
+    @Override
+    protected void onDestroy() {
 
+        super.onDestroy();
+        mRecyclerView.removeOnScrollListener(customRecyclerScrollViewListener);
+    }
 }

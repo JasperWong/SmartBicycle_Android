@@ -540,7 +540,8 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
         Intent i = new Intent();
         if(mUserEnteredText.length()>0){
 
-            String capitalizedString = Character.toUpperCase(mUserEnteredText.charAt(0))+mUserEnteredText.substring(1);
+            String capitalizedString = Character.toUpperCase
+                    (mUserEnteredText.charAt(0))+mUserEnteredText.substring(1);
             mUserToDoItem.setToDoText(capitalizedString);
         }
         else{

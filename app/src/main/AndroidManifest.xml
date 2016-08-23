@@ -62,7 +62,9 @@
         <activity android:name=".activity.AddToDoActivity"
                   android:launchMode="singleTask">
                     </activity>
+        <activity android:name=".activity.ReminderActivity">
 
+        </activity>
 
         <activity
             android:name=".activity.UserActivity"
@@ -90,8 +92,10 @@
             android:name=".service.BLEService"
             android:enabled="true" />
         <service android:name=".activity.TodoNotificationService"
+                 android:enabled="true"
             />
         <service android:name=".activity.DeleteNotificationService"
+                 android:enabled="true"
             />
     </application>
 

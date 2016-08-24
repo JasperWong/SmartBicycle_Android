@@ -216,7 +216,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if (BLEService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 Toast.makeText(MainActivity.this,"连接成功",Toast.LENGTH_LONG).show();
-                Intent intent1=new Intent(MainActivity.this,RouteActivity.class);
+                Intent intent1=new Intent(MainActivity.this,UserActivity.class);
                 startActivity(intent1);
 
             }  else if (BLEService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {

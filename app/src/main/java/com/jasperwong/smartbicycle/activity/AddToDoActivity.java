@@ -81,6 +81,7 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
         //Need references to these to change them during light/dark mode
         ImageButton reminderIconImageButton;
         TextView reminderRemindMeTextView;
+        setTheme(R.style.CustomStyle_LightTheme);
 //        theme = getSharedPreferences(SettingActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(SettingActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
 //        if(theme.equals(SettingActivity.LIGHTTHEME)){
 //            setTheme(R.style.CustomStyle_LightTheme);

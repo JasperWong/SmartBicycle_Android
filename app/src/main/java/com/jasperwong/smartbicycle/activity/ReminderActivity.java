@@ -43,6 +43,7 @@ public class ReminderActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         app = (AnalyticsApplication)getApplication();
         app.send(this);
+        setTheme(R.style.CustomStyle_LightTheme);
 //
 //        theme = getSharedPreferences(SettingActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(SettingActivity.THEME_SAVED,SettingActivity.LIGHTTHEME);
 //        if(theme.equals(SettingActivity.LIGHTTHEME)){
@@ -57,8 +58,6 @@ public class ReminderActivity extends AppCompatActivity {
         mToDoItems = SettingActivity.getLocallyStoredData(storeRetrieveData);
 
 //        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
-
-
 
         Intent i = getIntent();
         UUID id = (UUID)i.getSerializableExtra(TodoNotificationService.TODOUUID);

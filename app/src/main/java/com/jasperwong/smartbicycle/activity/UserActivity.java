@@ -102,27 +102,6 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         registerReceiver(broadcastReceiver, new IntentFilter(FrontService.TAG));
         saver = getSharedPreferences("data", MODE_PRIVATE).edit();
         loader= getSharedPreferences("data",MODE_PRIVATE);
-        nameShow.setText(loader.getString("username",""));
-        idShow.setText("ID:"+loader.getInt("id",0));
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor=db.query("USER",null,null,null,null,null,null,null);
-        float distanceTotal =0;
-        float hour = 0;
-        float times=0;
-        if(cursor.moveToFirst()){
-            do {
-                String username = cursor.getString(cursor.getColumnIndex("username"));
-                distanceTotal = cursor.getFloat(cursor.getColumnIndex("distanceTotal"));
-                hour = cursor.getFloat(cursor.getColumnIndex("hourTotal"));
-                times= cursor.getInt(cursor.getColumnIndex("timesTotal"));
-                if (nameShow.getText().equals(username)) {
-                    totalTimesTV.setText(times+"");
-                    totalHoursTV.setText(hour+"");
-                    distanceTotalTV.setText(distanceTotal+"");
-                    break;
-                }
-            }while(cursor.moveToNext());
-        }
     }
 
     private String getSelectedDatesString() {
@@ -132,6 +111,36 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         }
         return FORMATTER.format(date.getDate());
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        nameShow.setText(loader.getString("username",""));
+        idShow.setText("ID:"+loader.getInt("id",0));
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor=db.query("USER",null,null,null,null,null,null,null);
+        float distanceTotal_real =0;
+        float hour_real = 0;
+        float times_real=0;
+        if(cursor.moveToFirst()){
+            do {
+                String username = cursor.getString(cursor.getColumnIndex("username"));
+                float distanceTotal = cursor.getFloat(cursor.getColumnIndex("distanceTotal"));
+                float hour = cursor.getFloat(cursor.getColumnIndex("hourTotal"));
+                int times= cursor.getInt(cursor.getColumnIndex("timesTotal"));
+                if (nameShow.getText().equals(username)) {
+                    distanceTotal_real =distanceTotal;
+                    hour_real =hour;
+                    times_real=times;
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }
+        totalTimesTV.setText(times_real+"");
+        totalHoursTV.setText(hour_real+"");
+        distanceTotalTV.setText(distanceTotal_real+"");
+    }
+
     @Override
     protected void onDestroy()
     {
@@ -152,7 +161,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
                 String username = cursor.getString(cursor.getColumnIndex("username"));
                 String dateDB = cursor.getString(cursor.getColumnIndex("date"));
                 float distanceDay = cursor.getFloat(cursor.getColumnIndex("distanceDay"));
-                if (dateDB.equals(dateSelect)) {
+                if (dateDB.equals(dateSelect)&&username.equals(loader.getString("username",""))) {
                     distanceDay_real=distanceDay;
                     break;
                 }
@@ -210,7 +219,8 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
                     saver.putInt("id",id);
                     saver.commit();
                     nameShow.setText(loader.getString("username",""));
-
+                    changeOccurred();
+                    onResume();
                 }
             });
 
@@ -299,6 +309,14 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 //        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
 //        date.getMonth()
+    }
+
+    private void changeOccurred(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SettingActivity.SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SettingActivity.CHANGE_OCCURED, true);
+//        editor.commit();
+        editor.apply();
     }
 
     private void sendRequestWithHttpURLConnection(final String urlConfig) {

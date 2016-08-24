@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -42,13 +43,19 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class SettingActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
+
+    private final int HEALTHY_STATE_SLIM=0;
+    private final int HEALTHY_STATE_NORMAL=1;
+    private final int HEALTHY_STATE_FAT=2;
     private EditDialogFragment mEditDialogFrament=null;
     private RecyclerViewEmptySupport mRecyclerView;
     private FloatingActionButton mAddToDoItemFAB;
@@ -74,6 +81,15 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
     public static final String THEME_SAVED = "com.jaseprwong.smartbicycle.savedtheme";
     public static final String DARKTHEME = "com.jaseprwong.smartbicycle..darktheme";
     public static final String LIGHTTHEME = "com.jaseprwong.smartbicycle.lighttheme";
+    private int healthy_state=HEALTHY_STATE_NORMAL;
+    private float weight;
+    private float height;
+    private SharedPreferences.Editor saver;
+    private SharedPreferences loader;
+    private String PLAN_FAT="骑行 平路模式20分钟 爬坡模式10分钟";
+    private String PLAN_NORMAL="骑行 平路模式15分钟 爬坡模式15分钟";
+    private String PLAN_SLIM="骑行 平路模式15分钟 爬坡模式12分钟";
+
     private AnalyticsApplication app;
     private String[] testStrings = {"Clean my room",
             "Water the plants",
@@ -86,7 +102,6 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
         app = (AnalyticsApplication)getApplication();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Aller_Regular.tff").setFontAttrId(R.attr.fontPath).build());
-
         //We recover the theme we've set and setTheme accordingly
 //        theme = getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE).getString(THEME_SAVED, LIGHTTHEME);
 //
@@ -100,9 +115,10 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        saver = getSharedPreferences("data", MODE_PRIVATE).edit();
+        loader= getSharedPreferences("data",MODE_PRIVATE);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_setting);
         setSupportActionBar(toolbar);
-
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(CHANGE_OCCURED, false);
@@ -111,8 +127,9 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
         storeRetrieveData = new StoreRetrieveData(this, FILENAME);
         mToDoItemsArrayList =  getLocallyStoredData(storeRetrieveData);
         adapter = new BasicListAdapter(mToDoItemsArrayList);
-        setAlarms();
+        addPlan();
 
+        setAlarms();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -124,8 +141,10 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
         mCoordLayout = (CoordinatorLayout)findViewById(R.id.myCoordinatorLayout);
         mAddToDoItemFAB = (FloatingActionButton)findViewById(R.id.addToDoItemFAB);
 
-        mAddToDoItemFAB.setOnClickListener(new View.OnClickListener() {
+        height=loader.getFloat("height",0);
+        weight=loader.getFloat("weight",0);
 
+        mAddToDoItemFAB.setOnClickListener(new View.OnClickListener() {
             @SuppressWarnings("deprecation")
             @Override
             public void onClick(View v) {
@@ -137,28 +156,6 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
                 //noinspection ResourceType
 //                String color = getResources().getString(R.color.primary_ligher);
                 newTodo.putExtra(TODOITEM, item);
-//                View decorView = getWindow().getDecorView();
-//                View navView= decorView.findViewById(android.R.id.navigationBarBackground);
-//                View statusView = decorView.findViewById(android.R.id.statusBarBackground);
-//                Pair<View, String> navBar ;
-//                if(navView!=null){
-//                    navBar = Pair.create(navView, navView.getTransitionName());
-//                }
-//                else{
-//                    navBar = null;
-//                }
-//                Pair<View, String> statusBar= Pair.create(statusView, statusView.getTransitionName());
-//                ActivityOptions options;
-//                if(navBar!=null){
-//                    options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, navBar, statusBar);
-//                }
-//                else{
-//                    options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, statusBar);
-//                }
-
-//                startActivity(new Intent(MainActivity.this, TestLayout.class), options.toBundle());
-//                startActivityForResult(newTodo, REQUEST_ID_TODO_ITEM, options.toBundle());
-
                 startActivityForResult(newTodo, REQUEST_ID_TODO_ITEM);
             }
         });
@@ -201,6 +198,55 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
 
     }
 
+    private void addPlan(){
+        ToDoItem planItem=new ToDoItem();
+        Date planDate=new Date(System.currentTimeMillis());
+//        planDate.setYear(2017-1900);
+//        planDate.setMonth(8-1);
+//        planDate.setDate(25-1);
+//        planDate.setHours(20);
+//        planDate.setMinutes(9);
+//        planDate.setSeconds(0);
+//        for(int j=0;j<3;j++){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(planDate);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.HOUR_OF_DAY,20);
+//            calendar.set(Calendar.DAY_OF_WEEK,Calendar.DAY_OF_WEEK+1);
+            planDate = calendar.getTime();
+            planDate.setDate(planDate.getDate()+1);
+            planItem.setToDoDate(planDate);
+            if(healthy_state==HEALTHY_STATE_NORMAL) {
+                planItem.setToDoText(PLAN_NORMAL);
+            }else if(healthy_state==HEALTHY_STATE_FAT){
+                planItem.setToDoText(PLAN_FAT);
+            } else planItem.setToDoText(PLAN_SLIM);
+            planItem.setHasReminder(true);
+            planItem.setTodoColor(ColorGenerator.MATERIAL.getRandomColor());
+            Boolean existed1=false;
+            if(planItem.hasReminder() && planItem.getToDoDate()!=null){
+                Intent i = new Intent(this, TodoNotificationService.class);
+                i.putExtra(TodoNotificationService.TODOTEXT, planItem.getToDoText());
+                i.putExtra(TodoNotificationService.TODOUUID, planItem.getIdentifier());
+                createAlarm(i, planItem.getIdentifier().hashCode(), planItem.getToDoDate().getTime());
+//                Log.d("OskarSchindler", "Alarm Created: "+item.getToDoText()+" at "+item.getToDoDate());
+            }
+            for(int i = 0; i<mToDoItemsArrayList.size();i++){
+                if(planItem.getToDoDate().equals(mToDoItemsArrayList.get(i).getToDoDate())){
+                    mToDoItemsArrayList.set(i,planItem);
+                    existed1 = true;
+                    adapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+            if(!existed1) mToDoItemsArrayList.add(planItem);
+//        }
+    }
+
+
+
+
     public static ArrayList<ToDoItem> getLocallyStoredData(StoreRetrieveData storeRetrieveData){
         ArrayList<ToDoItem> items = null;
 
@@ -218,6 +264,18 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
 
     }
 
+    private void plan(){
+        double standard=(height-1.0)*0.9*weight;
+        if(weight<standard*1.1&&weight>standard*0.9){
+            healthy_state=HEALTHY_STATE_NORMAL;
+        } else if(weight<standard*0.9){
+            healthy_state=HEALTHY_STATE_SLIM;
+        } else {
+            healthy_state=HEALTHY_STATE_FAT;
+        }
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -228,6 +286,10 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(ReminderActivity.EXIT,false);
             editor.apply();
+            plan();
+
+
+
             finish();
         }
         /*
@@ -256,18 +318,23 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
     protected void onStart() {
         app = (AnalyticsApplication)getApplication();
         super.onStart();
+
+
+
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
         if(sharedPreferences.getBoolean(CHANGE_OCCURED, false)){
-
             mToDoItemsArrayList = getLocallyStoredData(storeRetrieveData);
             adapter = new BasicListAdapter(mToDoItemsArrayList);
             mRecyclerView.setAdapter(adapter);
-            setAlarms();
 
+            setAlarms();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(CHANGE_OCCURED, false);
 //            editor.commit();
             editor.apply();
+
+
+
 
 
         }
@@ -317,7 +384,6 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
     private void addToDataStore(ToDoItem item){
         mToDoItemsArrayList.add(item);
         adapter.notifyItemInserted(mToDoItemsArrayList.size() - 1);
-
     }
 
 
@@ -562,31 +628,6 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.aboutMeMenuItem:
-//                Intent i = new Intent(this, AboutActivity.class);
-//                startActivity(i);
-                return true;
-//            case R.id.switch_themes:
-//                if(mTheme == R.style.CustomStyle_DarkTheme){
-//                    addThemeToSharedPreferences(LIGHTTHEME);
-//                }
-//                else{
-//                    addThemeToSharedPreferences(DARKTHEME);
-//                }
-//
-////                if(mTheme == R.style.CustomStyle_DarkTheme){
-////                    mTheme = R.style.CustomStyle_LightTheme;
-////                }
-////                else{
-////                    mTheme = R.style.CustomStyle_DarkTheme;
-////                }
-//                this.recreate();
-//                return true;
-            case R.id.preferences:
-//                Intent intent = new Intent(this, SettingsActivity.class);
-//                startActivity(intent);
-                return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -607,7 +648,7 @@ public class SettingActivity extends BaseActivity implements NavigationView.OnNa
             Intent intent=new Intent(this,UserActivity.class);
             startActivity(intent);
         }   else if (id == R.id.nav_connect) {
-            Intent mainIntent = new Intent(this, SettingActivity.class);
+            Intent mainIntent = new Intent(this, MainActivity.class);
             startActivity(mainIntent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

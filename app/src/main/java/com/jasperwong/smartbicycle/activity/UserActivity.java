@@ -57,14 +57,14 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     @Bind(R.id.calendarView)
     MaterialCalendarView widget;
     private TextView dayKmTV;
-    private TextView totalTimesTV;
-    private TextView totalHoursTV;
+    public static TextView totalTimesTV;
+    public static TextView totalHoursTV;
     private MyDatabaseHelper dbHelper;
     private SharedPreferences.Editor saver;
     private SharedPreferences loader;
     private TextView nameShow;
     private TextView idShow;
-    private TextView distanceTotalTV;
+    public static TextView distanceTotalTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,24 +118,27 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         nameShow.setText(loader.getString("username",""));
         idShow.setText("ID:"+loader.getInt("id",0));
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor=db.query("USER",null,null,null,null,null,null,null);
+//        Cursor cursor=db.query("USER",null,null,null,null,null,null,null);
         float distanceTotal_real =0;
         float hour_real = 0;
-        float times_real=0;
-        if(cursor.moveToFirst()){
-            do {
-                String username = cursor.getString(cursor.getColumnIndex("username"));
-                float distanceTotal = cursor.getFloat(cursor.getColumnIndex("distanceTotal"));
-                float hour = cursor.getFloat(cursor.getColumnIndex("hourTotal"));
-                int times= cursor.getInt(cursor.getColumnIndex("timesTotal"));
-                if (nameShow.getText().equals(username)) {
-                    distanceTotal_real =distanceTotal;
-                    hour_real =hour;
-                    times_real=times;
-                    break;
-                }
-            }while(cursor.moveToNext());
-        }
+        int times_real=0;
+//        if(cursor.moveToFirst()){
+//            do {
+//                String username = cursor.getString(cursor.getColumnIndex("username"));
+//                float distanceTotal = cursor.getFloat(cursor.getColumnIndex("distanceTotal"));
+//                float hour = cursor.getFloat(cursor.getColumnIndex("hourTotal"));
+//                int times= cursor.getInt(cursor.getColumnIndex("timesTotal"));
+//                if (nameShow.getText().equals(username)) {
+//                    distanceTotal_real =distanceTotal;
+//                    hour_real =hour;
+//                    times_real=times;
+//                    break;
+//                }
+//            }while(cursor.moveToNext());
+//        }
+        distanceTotal_real=loader.getFloat("distanceTotal",0);
+        hour_real=loader.getFloat("hourTotal",0);
+        times_real=loader.getInt("timesTotal",0);
         totalTimesTV.setText(times_real+"");
         totalHoursTV.setText(hour_real+"");
         distanceTotalTV.setText(distanceTotal_real+"");
@@ -217,8 +220,10 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
                     saver.putFloat("height",Float.parseFloat(heightET.getText().toString()));
                     saver.putFloat("weight",Float.valueOf(weightET.getText().toString()));
                     saver.putInt("id",id);
+
                     saver.commit();
                     nameShow.setText(loader.getString("username",""));
+
                     changeOccurred();
                     onResume();
                 }

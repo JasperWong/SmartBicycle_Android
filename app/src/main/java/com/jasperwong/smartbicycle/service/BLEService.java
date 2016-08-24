@@ -26,15 +26,23 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.jasperwong.smartbicycle.activity.UserActivity;
 import com.jasperwong.smartbicycle.ble.SampleGattAttributes;
+import com.jasperwong.smartbicycle.sqlite.MyDatabaseHelper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,7 +52,9 @@ import java.util.UUID;
 
 public class BLEService extends Service
 {
-//    private byte []recData;
+
+    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+    private byte []recData;
     private final static String TAG = BLEService.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
@@ -52,6 +62,10 @@ public class BLEService extends Service
     private BluetoothGatt mBluetoothGatt;
     private String mBluetoothDeviceAddress;
     private int mConnectionState = STATE_DISCONNECTED;
+    private String username;
+    private SharedPreferences.Editor saver;
+    private SharedPreferences loader;
+    private MyDatabaseHelper dbHelper;
 
     //private final int REQUEST_ENABLE_BT = 1;
     private static final int STATE_DISCONNECTED = 0;
@@ -193,16 +207,64 @@ public class BLEService extends Service
 
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic)
     {
+        saver = getSharedPreferences("data", MODE_PRIVATE).edit();
+        loader= getSharedPreferences("data",MODE_PRIVATE);
+        int times;
+        float distance=0;
+        float hour=0;
+        int distance_metre=0;
+        int min=0;
+        dbHelper = new MyDatabaseHelper(this, "test.db", null, 1);
+        dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
         final Intent intent = new Intent(action);
         final byte[] data = characteristic.getValue();
 //        recData=data;
+        if(data[0]==117) {
+            if(data[1]==100) {
+                min = data[7];
+                distance_metre = data[2];
+                Log.d("data", "metre:" + distance_metre + " min:" + min);
+                distance = (float) (distance_metre / 1000.0);
+                hour = (float) (min / 60.0);
+                float distanceTotal=loader.getFloat("distanceTotal", 0) + distance;
+                float hourTotal=loader.getFloat("hourTotal",0)+hour;
+                int timesTotal=loader.getInt("timesTotal",0)+1;
+                saver.putFloat("distanceTotal", distanceTotal);
+                saver.putFloat("hourTotal",hourTotal);
+                saver.putInt("timesTotal",timesTotal);
+                saver.commit();
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                values.put("username", loader.getString("username","error"));
+                values.put("date", FORMATTER.format(System.currentTimeMillis()));
+                values.put("distanceDay", distance);
+                values.put("distanceTotal", distanceTotal);
+                values.put("hourTotal",hourTotal);
+                values.put("timesTotal",timesTotal);
+                db.replace("USER", null, values); // 插入第一条数据
+
+//                UserActivity.totalHoursTV.setText(hourTotal+"");
+//                UserActivity.totalTimesTV.setText(timesTotal+"");
+//                UserActivity.distanceTotalTV.setText(distanceTotal+"");
+
+            }
+        }
+
+
+
+        username=loader.getString("username","none");
+        times=loader.getInt("timesTotal",0);
+//        distanceTotal=loader.getFloat("");
 //        Log.d("usart",data+"");
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
-//            for(byte byteChar : data)
+//            for(byte byteChar : data){
+//
+//            }
+//            stringBuilder.toString()
 //                stringBuilder.append(String.format("%02X ", byteChar));
             intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-
+//            data1.equals(new String(0xff+""));
 
 
             String string=new String("ring");

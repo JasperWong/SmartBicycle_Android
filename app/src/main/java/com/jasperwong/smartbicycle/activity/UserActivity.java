@@ -113,7 +113,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
-    protected void onResume(){
+    public void onResume(){
         super.onResume();
         nameShow.setText(loader.getString("username",""));
         idShow.setText("ID:"+loader.getInt("id",0));
@@ -122,6 +122,7 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         float distanceTotal_real =0;
         float hour_real = 0;
         int times_real=0;
+
 //        if(cursor.moveToFirst()){
 //            do {
 //                String username = cursor.getString(cursor.getColumnIndex("username"));
@@ -139,6 +140,10 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
         distanceTotal_real=loader.getFloat("distanceTotal",0);
         hour_real=loader.getFloat("hourTotal",0);
         times_real=loader.getInt("timesTotal",0);
+        BigDecimal  b  =   new BigDecimal(distanceTotal_real);
+        distanceTotal_real=b.setScale(3,BigDecimal.ROUND_HALF_UP).floatValue();
+        BigDecimal  a  =   new BigDecimal(hour_real);
+        hour_real=a.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
         totalTimesTV.setText(times_real+"");
         totalHoursTV.setText(hour_real+"");
         distanceTotalTV.setText(distanceTotal_real+"");
@@ -261,16 +266,10 @@ public class UserActivity extends BaseActivity implements NavigationView.OnNavig
                     sendRequestWithHttpURLConnection(url);
                 }while(cursor.moveToNext());
                 cursor.close();
+                db.close();
             }
-//            ContentValues values = new ContentValues();
-//            // 开始组装第一条数据
-//            values.put("username", "JasperWong");
-//            values.put("date", "2016年8月18日");
-//            values.put("distanceDay", 12.11);
-//            values.put("distanceTotal", 13.22);
-//            values.put("hourTotal",55.1);
-//            values.put("timesTotal",1123);
-//            db.replace("USER", null, values); // 插入第一条数据
+        }else if(id==R.id.action_resume){
+            onResume();
         }
         return super.onOptionsItemSelected(item);
     }

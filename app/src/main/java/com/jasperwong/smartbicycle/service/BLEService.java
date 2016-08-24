@@ -243,11 +243,14 @@ public class BLEService extends Service
                 values.put("hourTotal",hourTotal);
                 values.put("timesTotal",timesTotal);
                 db.replace("USER", null, values); // 插入第一条数据
+                values.clear();
+                db.close();
                 Toast.makeText(this,"update success",Toast.LENGTH_SHORT).show();
 //                UserActivity.totalHoursTV.setText(hourTotal+"");
 //                UserActivity.totalTimesTV.setText(timesTotal+"");
 //                UserActivity.distanceTotalTV.setText(distanceTotal+"");
-                UserActivity.totalHoursTV.setText(2+"");
+//                UserActivity.totalHoursTV.setText(2+"");
+
             }
         }
 

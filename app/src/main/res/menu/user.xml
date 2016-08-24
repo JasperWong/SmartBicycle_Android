@@ -11,4 +11,9 @@
         android:orderInCategory="100"
         android:title="Update"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_resume"
+        android:orderInCategory="100"
+        android:title="resume"
+        app:showAsAction="never" />
 </menu>

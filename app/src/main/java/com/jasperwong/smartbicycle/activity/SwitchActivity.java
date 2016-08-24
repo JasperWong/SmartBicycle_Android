@@ -245,7 +245,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                 values.put("hourTotal",2.4);
                 values.put("timesTotal",5);
                 db.replace("USER", null, values); // 插入第一条数据
-
+                db.delete("USER","date=?",new String[]{"2016年8月25日"});
                 saver.putFloat("distanceTotal",(float)22.15);
                 saver.putFloat("hourTotal",(float)2.4);
                 saver.putInt("timesTotal",5);

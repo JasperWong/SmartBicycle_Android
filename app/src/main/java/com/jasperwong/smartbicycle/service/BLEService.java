@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jasperwong.smartbicycle.activity.UserActivity;
 import com.jasperwong.smartbicycle.ble.SampleGattAttributes;
@@ -242,11 +243,11 @@ public class BLEService extends Service
                 values.put("hourTotal",hourTotal);
                 values.put("timesTotal",timesTotal);
                 db.replace("USER", null, values); // 插入第一条数据
-
+                Toast.makeText(this,"update success",Toast.LENGTH_SHORT).show();
 //                UserActivity.totalHoursTV.setText(hourTotal+"");
 //                UserActivity.totalTimesTV.setText(timesTotal+"");
 //                UserActivity.distanceTotalTV.setText(distanceTotal+"");
-
+                UserActivity.totalHoursTV.setText(2+"");
             }
         }
 

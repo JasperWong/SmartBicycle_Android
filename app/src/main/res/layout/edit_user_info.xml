@@ -46,7 +46,6 @@
         android:layout_toRightOf="@+id/heightShow"
         android:layout_below="@+id/UserNameInput"
         android:layout_marginTop="0dp"
-        android:hint="公斤"
         />
 
     <TextView
@@ -65,7 +64,6 @@
         android:layout_below="@+id/heightShow"
         android:layout_toRightOf="@+id/weightShow"
         android:layout_marginTop="0dp"
-        android:hint="米"
        />
     <!--<Button-->
         <!--android:layout_width="30dp"-->

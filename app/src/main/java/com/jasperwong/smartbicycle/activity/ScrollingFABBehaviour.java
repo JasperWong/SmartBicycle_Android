@@ -21,7 +21,7 @@ public class ScrollingFABBehaviour extends CoordinatorLayout.Behavior<FloatingAc
 //        this.toolbarHeight = Utils.getToolbarHeight(context);
     }
 
-
+    
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
         return (dependency instanceof Snackbar.SnackbarLayout) || (dependency instanceof Toolbar);

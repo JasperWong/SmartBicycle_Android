@@ -87,21 +87,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        InitBLE();
-        InitGPS(this);
-        startScan();
-        mListView=(ListView)findViewById(R.id.list_device);
-        mDeviceAdapter=new DeviceAdapter(this);
-        mDeviceAdapter.setData(mDeviceList);
-        mListView.setAdapter(mDeviceAdapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BleDevice=mDeviceList.get(position);
-                ConnectedState=mBluetoothLeService.connect(BleDevice.getAddress());
-            }
-        });
+//        InitBLE();
+//        InitGPS(this);
+//        startScan();
+//        mListView=(ListView)findViewById(R.id.list_device);
+//        mDeviceAdapter=new DeviceAdapter(this);
+//        mDeviceAdapter.setData(mDeviceList);
+//        mListView.setAdapter(mDeviceAdapter);
+//
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                BleDevice=mDeviceList.get(position);
+//                ConnectedState=mBluetoothLeService.connect(BleDevice.getAddress());
+//            }
+//        });
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -125,22 +125,22 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_guide) {
-            Intent guideIntent= new Intent(this,RouteActivity.class);
+
+        if (id == R.id.nav_loca) {
+            Intent guideIntent = new Intent(this, FoundActivity.class);
             startActivity(guideIntent);
+            // Handle the camera action
         } else if (id == R.id.nav_switch) {
-            Intent switchIntent=new Intent(this,SwitchActivity.class);
+            Intent switchIntent = new Intent(this, SwitchActivity.class);
             startActivity(switchIntent);
-        } else if (id == R.id.nav_setting) {
-            Intent settingIntent=new Intent(this,SettingActivity.class);
+        } else if (id == R.id.nav_plan) {
+            Intent settingIntent = new Intent(this, SettingActivity.class);
             startActivity(settingIntent);
-        }else if(id==R.id.nav_share){
-            Intent intent=new Intent(this,UserActivity.class);
+        } else if (id == R.id.nav_share) {
+            Intent intent = new Intent(this, UserActivity.class);
             startActivity(intent);
-        }else if (id == R.id.nav_connect) {
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            startActivity(mainIntent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

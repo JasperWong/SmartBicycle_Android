@@ -2,26 +2,37 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+        <item android:title="室内">
+            <menu>
+                <!--<item -->
+                    <!--android:id="@+id/"-->
+                <item
+                    android:id="@+id/nav_plan"
+                    android:icon="@drawable/setting_drawer"
+                    android:title="健身计划" />
+                <item
+                    android:id="@+id/nav_share"
+                    android:icon="@drawable/share_drawer"
+                    android:title="健身数据"/>
+            </menu>
+        </item>
+    </group>
+
+
+
+    <group android:checkableBehavior="single">
+        <item android:title="室外">
+            <menu>
         <item
-            android:id="@+id/nav_guide"
+            android:id="@+id/nav_loca"
             android:icon="@drawable/ic_explore_black_24dp"
-            android:title="导航" />
+            android:title="精准寻回"/>
         <item
             android:id="@+id/nav_switch"
             android:icon="@drawable/switch5_drawer_72"
-            android:title="开关" />
-        <item
-            android:title="连接自行车"
-            android:id="@+id/nav_connect"
-            android:icon="@drawable/bluetooth_setting_drawer"/>
-        <item
-            android:id="@+id/nav_setting"
-            android:icon="@drawable/setting_drawer"
-            android:title="设置" />
-        <item
-            android:id="@+id/nav_share"
-            android:icon="@drawable/share_drawer"
-            android:title="分享"/>
+            android:title="远程操控" />
+            </menu>
+        </item>
     </group>
 
     <item android:title="关于"

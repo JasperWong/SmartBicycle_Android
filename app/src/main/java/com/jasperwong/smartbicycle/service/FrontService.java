@@ -11,9 +11,6 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.jasperwong.smartbicycle.R;
-import com.jasperwong.smartbicycle.activity.MainActivity;
-
 import static android.content.Intent.getIntent;
 
 /**

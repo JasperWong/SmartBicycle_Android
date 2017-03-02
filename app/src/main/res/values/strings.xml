@@ -317,5 +317,6 @@
 
     <string name="snooze">小睡</string>
     <string name="remove">移除</string>
+    <string name="title_activity_found">FoundActivity</string>
 
 </resources>

@@ -10,6 +10,8 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
@@ -40,6 +42,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import java.util.logging.LogRecord;
+
 public class SwitchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
     private String TAG = this.getClass().getSimpleName();
     Button button;
@@ -50,7 +54,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private ImageView alarmBTN=null;
     private ImageView photoBTN=null;
     private int isLock=0;
-    private int alarm=0;
+    private int isAlarm=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,13 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
 
 
     }
+
+    private Handler handler=new Handler(){
+        public void handlerMessage(Message msg){
+            
+        }
+    };
+
 
 
 
@@ -122,16 +133,14 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             super.onBackPressed();
         }
     }
-    private void sendRequestWithHttpURLConnection() {
+    private void sendRequestWithHttpURLConnection(final String UrlStr) {
         // 开启线程来发起网络请求
         new Thread(new Runnable() {
             @Override
             public void run() {
                 HttpURLConnection connection = null;
                 try {
-                    URL url = new URL("http://jasperwong.cn:8082/SmartBicycle_Server/user/insert?username=JasperWong&" +
-                            "date=2016年8月25日&distanceDay=22.12&" +
-                            "distanceTotal=12.1&HourTotal=12&timesTotal=13");
+                    URL url = new URL(UrlStr);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);

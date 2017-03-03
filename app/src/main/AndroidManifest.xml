@@ -3,8 +3,8 @@
     package="com.jasperwong.smartbicycle">
 
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!--<uses-permission android:name="android.permission.BLUETOOTH" />-->
+    <!--<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    a
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -48,15 +47,29 @@
         <activity
             android:name=".activity.SettingActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <activity
             android:name=".activity.GuideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask">
+        </activity>
+
         <activity
             android:name=".activity.AddToDoActivity"
-            android:launchMode="singleTask"></activity>
-        <activity android:name=".activity.ReminderActivity"></activity>
+            android:launchMode="singleTask">
+        </activity>
+
+        <activity android:name=".activity.ReminderActivity">
+        </activity>
+
+        <activity
+            android:name=".activity.FoundActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
+        </activity>
+
         <activity
             android:name=".activity.UserActivity"
             android:launchMode="singleTask"
@@ -91,11 +104,6 @@
         <service
             android:name=".activity.DeleteNotificationService"
             android:enabled="true" />
-
-        <activity
-            android:name=".activity.FoundActivity"
-            android:label="@string/title_activity_found"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

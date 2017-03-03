@@ -4,51 +4,39 @@
     <group android:checkableBehavior="single">
         <item android:title="室内">
             <menu>
-                <!--<item -->
-                    <!--android:id="@+id/"-->
-                <item
-                    android:id="@+id/nav_plan"
-                    android:icon="@drawable/setting_drawer"
-                    android:title="健身计划" />
                 <item
                     android:id="@+id/nav_share"
-                    android:icon="@drawable/share_drawer"
+                    android:icon="@drawable/data_drawer"
                     android:title="健身数据"/>
+                <item
+                    android:id="@+id/nav_plan"
+                    android:icon="@drawable/plan_drawer"
+                    android:title="健身计划" />
             </menu>
         </item>
     </group>
-
-
 
     <group android:checkableBehavior="single">
         <item android:title="室外">
             <menu>
-        <item
-            android:id="@+id/nav_loca"
-            android:icon="@drawable/ic_explore_black_24dp"
-            android:title="精准寻回"/>
-        <item
-            android:id="@+id/nav_switch"
-            android:icon="@drawable/switch5_drawer_72"
-            android:title="远程操控" />
+                <item
+                    android:id="@+id/nav_switch"
+                    android:icon="@drawable/switch5_drawer_72"
+                    android:title="远程操控" />
+                <item
+                    android:id="@+id/nav_loca"
+                    android:icon="@drawable/ic_explore_black_24dp"
+                    android:title="精准寻回"/>
             </menu>
         </item>
     </group>
 
-    <item android:title="关于"
-        >
+    <item android:title="关于">
         <menu>
             <item
-                android:id="@+id/nav_state"
-                android:title="state"
-                android:showAsAction="never"/>
-
-            <item
                 android:id="@+id/nav_version"
-                android:title="version:1.0"/>
-
+                android:title="version:2.0"/>
         </menu>
-
     </item>
     <!--<item android:title="Communicate">-->
         <!--<menu>-->

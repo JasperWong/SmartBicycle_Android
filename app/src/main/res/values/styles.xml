@@ -53,6 +53,5 @@
         <item name="colorSwitchThumbNormal">@color/grey300</item>
         <!--Inactive track color-->
         <item name="android:colorForeground">@color/grey600</item>
-
     </style>
 </resources>

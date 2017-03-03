@@ -18,7 +18,6 @@ import com.jasperwong.smartbicycle.R;
 
 public class FoundActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

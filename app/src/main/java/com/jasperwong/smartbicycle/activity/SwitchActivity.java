@@ -17,12 +17,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.jasperwong.smartbicycle.R;
 import com.jasperwong.smartbicycle.ble.GATTUtils;
@@ -40,18 +42,24 @@ import java.util.List;
 
 public class SwitchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
     private String TAG = this.getClass().getSimpleName();
-    private BLEService mBluetoothLeService=null;
-    BluetoothGattCharacteristic mCharacteristic=null;
     Button button;
     private MyDatabaseHelper dbHelper;
     private SharedPreferences.Editor saver;
     private SharedPreferences loader;
+    private ImageView lockBTN=null;
+    private ImageView alarmBTN=null;
+    private ImageView photoBTN=null;
+    private int isLock=0;
+    private int alarm=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_switch);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_switch);
         setSupportActionBar(toolbar);
+        lockBTN=(ImageView)findViewById(R.id.lockView);
+        alarmBTN=(ImageView)findViewById(R.id.alarmView);
+        photoBTN=(ImageView)findViewById(R.id.photoView);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,67 +68,25 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        Intent gattServiceIntent=new Intent(SwitchActivity.this,BLEService.class);
-//        bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
-        button=(Button)findViewById(R.id.button);
-        button.setOnClickListener(this);
-        dbHelper = new MyDatabaseHelper(this, "test.db", null, 1);
-        saver = getSharedPreferences("data", MODE_PRIVATE).edit();
-        loader= getSharedPreferences("data",MODE_PRIVATE);
+
+
     }
 
-    private final ServiceConnection mServiceConnection = new ServiceConnection()
-    {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service)
-        {
-            Log.d(TAG, "start service Connection");
 
-            mBluetoothLeService = ((BLEService.LocalBinder) service).getService();
-
-            //从搜索出来的services里面找出合适的service
-            List<BluetoothGattService> gattServiceList = mBluetoothLeService.getSupportedGattServices();
-            mCharacteristic = GATTUtils.lookupGattServices(gattServiceList, GATTUtils.BLE_TX);
-//            mCharacteristic.setValue("吴彦祖");
-//            mBluetoothLeService.writeCharacteristic(mCharacteristic);
-//            mBluetoothLeService.readCharacteristic(mCharacteristic);
-//            //
-            if( null != mCharacteristic )
-            {
-                mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
-//                InputStream inputStream = buildSendData();
-//                inputStreamArrayList.add(inputStream);
-//                byte[] writeBytes = new byte[11];
-//                int byteCount = 0;
-//                try
-//                {
-//                    byteCount = inputStream.read(writeBytes,0,11);
-//                    if( byteCount > 0)
-//                    {
-//                        mCharacteristic.setValue(writeBytes);
-//                        mBluetoothLeService.writeCharacteristic(mCharacteristic);
-//                    }
-//                }
-//                catch (IOException e)
-//                {
-//                    e.printStackTrace();
-//                }
-           }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName)
-        {
-            Log.d(TAG, "end Service Connection");
-            mBluetoothLeService = null;
-        }
-
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_switch, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id=item.getItemId();
+        if(id==R.id.menu_refresh){
+            ;
+        }
         return true;
     }
 
@@ -201,55 +167,55 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     public void onClick(View v) {
         int id=v.getId();
         switch (id) {
-            case R.id.button:
-
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            // 开始组装第一条数据
-                values.put("username", "JasperWong");
-                values.put("date", "2016年8月18日");
-                values.put("distanceDay", 3.11);
-                values.put("distanceTotal", 3.11);
-                values.put("hourTotal",0.4);
-                values.put("timesTotal",1);
-                db.replace("USER", null, values); // 插入第一条数据
-                values.clear();
-                values.put("username", "JasperWong");
-                values.put("date", "2016年8月19日");
-                values.put("distanceDay", 2.31);
-                values.put("distanceTotal", 5.42);
-                values.put("hourTotal",0.8);
-                values.put("timesTotal",2);
-                db.replace("USER", null, values); // 插入第一条数据
-                values.clear();
-                values.put("username", "JasperWong");
-                values.put("date", "2016年8月20日");
-                values.put("distanceDay", 2.11);
-                values.put("distanceTotal", 7.53);
-                values.put("hourTotal",1.1);
-                values.put("timesTotal",3);
-                db.replace("USER", null, values); // 插入第一条数据
-                values.clear();
-                values.put("username", "JasperWong");
-                values.put("date", "2016年8月21日");
-                values.put("distanceDay", 2.51);
-                values.put("distanceTotal", 10.04);
-                values.put("hourTotal",1.5);
-                values.put("timesTotal",4);
-                db.replace("USER", null, values); // 插入第一条数据
-                values.clear();
-                values.put("username", "JasperWong");
-                values.put("date", "2016年8月22日");
-                values.put("distanceDay", 12.11);
-                values.put("distanceTotal", 22.15);
-                values.put("hourTotal",2.4);
-                values.put("timesTotal",5);
-                db.replace("USER", null, values); // 插入第一条数据
-                db.delete("USER","date=?",new String[]{"2016年8月25日"});
-                saver.putFloat("distanceTotal",(float)22.15);
-                saver.putFloat("hourTotal",(float)2.4);
-                saver.putInt("timesTotal",5);
-                saver.commit();
+//            case R.id.button:
+//
+//            SQLiteDatabase db = dbHelper.getWritableDatabase();
+//            ContentValues values = new ContentValues();
+//            // 开始组装第一条数据
+//                values.put("username", "JasperWong");
+//                values.put("date", "2016年8月18日");
+//                values.put("distanceDay", 3.11);
+//                values.put("distanceTotal", 3.11);
+//                values.put("hourTotal",0.4);
+//                values.put("timesTotal",1);
+//                db.replace("USER", null, values); // 插入第一条数据
+//                values.clear();
+//                values.put("username", "JasperWong");
+//                values.put("date", "2016年8月19日");
+//                values.put("distanceDay", 2.31);
+//                values.put("distanceTotal", 5.42);
+//                values.put("hourTotal",0.8);
+//                values.put("timesTotal",2);
+//                db.replace("USER", null, values); // 插入第一条数据
+//                values.clear();
+//                values.put("username", "JasperWong");
+//                values.put("date", "2016年8月20日");
+//                values.put("distanceDay", 2.11);
+//                values.put("distanceTotal", 7.53);
+//                values.put("hourTotal",1.1);
+//                values.put("timesTotal",3);
+//                db.replace("USER", null, values); // 插入第一条数据
+//                values.clear();
+//                values.put("username", "JasperWong");
+//                values.put("date", "2016年8月21日");
+//                values.put("distanceDay", 2.51);
+//                values.put("distanceTotal", 10.04);
+//                values.put("hourTotal",1.5);
+//                values.put("timesTotal",4);
+//                db.replace("USER", null, values); // 插入第一条数据
+//                values.clear();
+//                values.put("username", "JasperWong");
+//                values.put("date", "2016年8月22日");
+//                values.put("distanceDay", 12.11);
+//                values.put("distanceTotal", 22.15);
+//                values.put("hourTotal",2.4);
+//                values.put("timesTotal",5);
+//                db.replace("USER", null, values); // 插入第一条数据
+//                db.delete("USER","date=?",new String[]{"2016年8月25日"});
+//                saver.putFloat("distanceTotal",(float)22.15);
+//                saver.putFloat("hourTotal",(float)2.4);
+//                saver.putInt("timesTotal",5);
+//                saver.commit();
         }
     }
 

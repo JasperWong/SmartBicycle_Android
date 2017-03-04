@@ -79,9 +79,6 @@ public class RouteActivity extends BaseActivity implements NavigationView.OnNavi
 //        openGPS();
     }
 
-
-
-
     private void init() {
         if (aMap == null) {
             aMap = mMapView.getMap();

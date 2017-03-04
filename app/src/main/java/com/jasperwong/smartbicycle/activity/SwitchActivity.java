@@ -1,52 +1,35 @@
 package com.jasperwong.smartbicycle.activity;
-
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
-import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-
+import android.widget.TextView;
 import com.jasperwong.smartbicycle.R;
-import com.jasperwong.smartbicycle.ble.GATTUtils;
-import com.jasperwong.smartbicycle.service.BLEService;
 import com.jasperwong.smartbicycle.sqlite.MyDatabaseHelper;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-
-import java.util.logging.LogRecord;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SwitchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
     private String TAG = this.getClass().getSimpleName();
-    Button button;
     private MyDatabaseHelper dbHelper;
     private SharedPreferences.Editor saver;
     private SharedPreferences loader;
@@ -55,15 +38,71 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private ImageView photoBTN=null;
     private int isLock=0;
     private int isAlarm=0;
+    public static final int RESPONSE = 0;
+    private boolean isUpdateDone=false;
+    private boolean isUpdateStatus=false;
+    Timer QueryTimer = new Timer();
+    SmsManager smsManager =null;
+    private double bicycleLongtitude=0;
+    private double bicycleLatitude=0;
+    private int bicycleStatus=0;
+    private TextView statusTV=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_switch);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_switch);
         setSupportActionBar(toolbar);
+        smsManager=SmsManager.getDefault();
         lockBTN=(ImageView)findViewById(R.id.lockView);
         alarmBTN=(ImageView)findViewById(R.id.alarmView);
         photoBTN=(ImageView)findViewById(R.id.photoView);
+        statusTV=(TextView)findViewById(R.id.statusView);
+        lockBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isLock==0){
+                    isLock=1;
+                    lockBTN.setImageResource(R.drawable.switch_on);
+                }else {
+                    isLock=0;
+                    lockBTN.setImageResource(R.drawable.switch_off);
+                }
+                String sendJson=new String("{\"locker\":"+isLock
+                                            +",\"alarm\":"+isAlarm
+                                            +",\"photo\":0}");
+                smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
+                sendUpdateRequest();
+            }
+        });
+
+        alarmBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isAlarm==0){
+                    isAlarm=1;
+                    alarmBTN.setImageResource(R.drawable.switch_on);
+                }else {
+                    isAlarm=0;
+                    alarmBTN.setImageResource(R.drawable.switch_off);
+                }
+                String sendJson=new String("{\"locker\":"+isLock
+                        +",\"alarm\":"+isAlarm
+                        +",\"photo\":0}");
+                smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
+                sendUpdateRequest();
+            }
+        });
+
+        photoBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sendJson=new String("{\"locker\":"+isLock
+                        +",\"alarm\":"+isAlarm
+                        +",\"photo\":1}");
+                smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -72,17 +111,133 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
+        QueryTimer.schedule(queryTask,0,500);
     }
 
     private Handler handler=new Handler(){
-        public void handlerMessage(Message msg){
-            
+        public void handleMessage(Message msg){
+            Log.d("test","enter handler");
+            switch (msg.what){
+                case RESPONSE: {
+                    String responseStr = (String) msg.obj;
+                    if (isUpdateStatus) {         //若res为success则是更改数据成功
+                        if (responseStr.equals(new String("success"))) {
+                            isUpdateStatus = false;
+                            Log.d("test", "update success");
+                            return;
+                        } else {
+                            sendUpdateRequest();        //保证成功更新服务器状态
+                            Log.d("test", "update fail");
+                        }
+                    } else {
+                        String remoteJson = responseStr;
+                        try {
+                            JSONObject jsonObject = new JSONObject(remoteJson);
+                            bicycleStatus = Integer.parseInt(jsonObject.getString("status"));
+                            bicycleLatitude = Double.parseDouble(jsonObject.getString("latitude"));
+                            bicycleLongtitude = Double.parseDouble(jsonObject.getString("longitude"));
+                            Log.d("test", "status:" + bicycleStatus);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    switch (bicycleStatus) {
+                        case 0: {
+                            statusTV.setText("自行车状态:正常");
+                            break;
+                        }
+                        case 1: {
+                            statusTV.setText("自行车状态:多次小范围移动");
+                            break;
+                        }
+                        case 2: {
+                            statusTV.setText("自行车状态:持续多次震动");
+                            break;
+                        }
+                        case 3: {
+                            statusTV.setText("自行车状态:倒下");
+                            break;
+                        }
+                        case 4: {
+                            statusTV.setText("自行车状态:被抬高超过50cm");
+                            break;
+                        }
+                        case 5: {
+                            statusTV.setText("自行车状态:长时间处于抬高状态");
+                            break;
+                        }
+                        case 6: {
+                            statusTV.setText("自行车状态:长时间处于震动状态");
+                            break;
+                        }
+                        case 7: {
+                            statusTV.setText("自行车状态:被撬锁");
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                    break;
+                }
+
+            }
         }
     };
 
+    private void sendUpdateRequest(){
+        StringBuilder stringBuilder=new StringBuilder("http://jasperwong.cn:8082/SmartBicycle_Server/bicycle/update?id=1&select=2");
+        stringBuilder.append("&locker="+isLock);
+        stringBuilder.append("&alarm="+isAlarm);
+        isUpdateStatus=true;
+        sendRequestWithHttpURLConnection(stringBuilder.toString());
+    }
 
+    private void sendRequestWithHttpURLConnection(final String UrlStr){
+        // 开启线程来发起网络请求
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection connection = null;
+                try {
+                    URL url = new URL(UrlStr);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(8000);
+                    connection.setReadTimeout(8000);
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    InputStream in = connection.getInputStream();
+                    // 下面对获取到的输入流进行读取
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(in));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Message message = new Message();
+                    message.what = RESPONSE;
+                    // 将服务器返回的结果存放到Message中
+                    message.obj = response.toString();
+                    handler.sendMessage(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    TimerTask queryTask=new TimerTask() {
+        @Override
+        public void run() {
+            Log.d("test","start task");
+            sendRequestWithHttpURLConnection("http://jasperwong.cn:8082/SmartBicycle_Server/bicycle/query?id=1");
+        }
+    };
 
 
     @Override
@@ -108,7 +263,6 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         if (id == R.id.nav_loca) {
             Intent guideIntent = new Intent(this, FoundActivity.class);
             startActivity(guideIntent);
-            // Handle the camera action
         } else if (id == R.id.nav_switch) {
             Intent switchIntent = new Intent(this, SwitchActivity.class);
             startActivity(switchIntent);
@@ -132,44 +286,6 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         } else {
             super.onBackPressed();
         }
-    }
-    private void sendRequestWithHttpURLConnection(final String UrlStr) {
-        // 开启线程来发起网络请求
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HttpURLConnection connection = null;
-                try {
-                    URL url = new URL(UrlStr);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(8000);
-                    connection.setReadTimeout(8000);
-                    connection.setDoInput(true);
-                    connection.setDoOutput(true);
-                    InputStream in = connection.getInputStream();
-                    // 下面对获取到的输入流进行读取
-                    BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(in));
-                    StringBuilder response = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
-                    }
-//                    Message message = new Message();
-//                    message.what = SHOW_RESPONSE;
-//                    // 将服务器返回的结果存放到Message中
-//                    message.obj = response.toString();
-//                    handler.sendMessage(message);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null) {
-                        connection.disconnect();
-                    }
-                }
-            }
-        }).start();
     }
 
     @Override

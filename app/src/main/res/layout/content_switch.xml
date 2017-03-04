@@ -5,7 +5,7 @@
 
     <WebView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/webView"
         android:background="@color/black">
@@ -18,7 +18,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        android:id="@+id/photoView"/>
+        android:id="@+id/photoView"
+        android:background="?android:attr/selectableItemBackground"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +29,6 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         android:layout_marginLeft="45dp"
-
         />
     <ImageView
         android:layout_width="50dp"
@@ -38,6 +38,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="35dp"
+        android:background="?android:attr/selectableItemBackground"
         />
 
     <TextView
@@ -58,5 +59,17 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
-        android:layout_marginRight="35dp"/>
+        android:layout_marginRight="35dp"
+        android:background="?android:attr/selectableItemBackground"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="自行车状态:正常"
+        android:id="@+id/statusView"
+        android:layout_above="@+id/photoView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/white"
+        android:textSize="20dp"/>
 </RelativeLayout>

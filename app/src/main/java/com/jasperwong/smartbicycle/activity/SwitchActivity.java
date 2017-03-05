@@ -68,7 +68,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                 if(isLock==0){
                     isLock=1;
 //                    lockBTN.setImageResource(R.drawable.switch_on);
-                }else {
+                }else if(isLock==1){
                     isLock=0;
 //                    lockBTN.setImageResource(R.drawable.switch_off);
                 }
@@ -86,7 +86,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                 if(isAlarm==0){
                     isAlarm=1;
 //                    alarmBTN.setImageResource(R.drawable.switch_on);
-                }else {
+                }else if(isAlarm==1){
                     isAlarm=0;
 //                    alarmBTN.setImageResource(R.drawable.switch_off);
                 }
@@ -142,6 +142,8 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                             bicycleLongtitude = Double.parseDouble(jsonObject.getString("longitude"));
                             bicyleLock=Integer.parseInt(jsonObject.getString("locker"));
                             bicycleAlarm=Integer.parseInt(jsonObject.getString("alarm"));
+                            isAlarm=bicycleAlarm;
+                            isLock=bicyleLock;
                             Log.d("test", "status:" + bicycleStatus);
                         } catch (JSONException e) {
                             e.printStackTrace();

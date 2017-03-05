@@ -67,10 +67,10 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             public void onClick(View v) {
                 if(isLock==0){
                     isLock=1;
-                    lockBTN.setImageResource(R.drawable.switch_on);
+//                    lockBTN.setImageResource(R.drawable.switch_on);
                 }else {
                     isLock=0;
-                    lockBTN.setImageResource(R.drawable.switch_off);
+//                    lockBTN.setImageResource(R.drawable.switch_off);
                 }
                 String sendJson=new String("{\"locker\":"+isLock
                                             +",\"alarm\":"+isAlarm
@@ -85,10 +85,10 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             public void onClick(View v) {
                 if(isAlarm==0){
                     isAlarm=1;
-                    alarmBTN.setImageResource(R.drawable.switch_on);
+//                    alarmBTN.setImageResource(R.drawable.switch_on);
                 }else {
                     isAlarm=0;
-                    alarmBTN.setImageResource(R.drawable.switch_off);
+//                    alarmBTN.setImageResource(R.drawable.switch_off);
                 }
                 String sendJson=new String("{\"locker\":"+isLock
                         +",\"alarm\":"+isAlarm
@@ -115,7 +115,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        QueryTimer.schedule(queryTask,0,500);
+        QueryTimer.schedule(queryTask,0,50);
     }
 
     private Handler handler=new Handler(){

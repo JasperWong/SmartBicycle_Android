@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.jasperwong.smartbicycle.R;
@@ -39,17 +40,20 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private int isLock=0;
     private int isAlarm=0;
     public static final int RESPONSE = 0;
+    public static final int GETPHOTO=1;
     private boolean isUpdateDone=false;
     private boolean isUpdateStatus=false;
     Timer QueryTimer = new Timer();
+    Timer PhotoTimer=new Timer();
     SmsManager smsManager =null;
     private double bicycleLongtitude=0;
     private double bicycleLatitude=0;
     private int bicycleStatus=0;
-    private int bicyleLock=0;
+    private int bicycleLock=0;
     private int bicycleAlarm=0;
     private TextView statusTV=null;
-    private ImageView imageView=null;
+    private WebView webView=null;
+    private boolean isGetPhoto=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,16 +65,16 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         alarmBTN=(ImageView)findViewById(R.id.alarmView);
         photoBTN=(ImageView)findViewById(R.id.photoView);
         statusTV=(TextView)findViewById(R.id.statusView);
-        imageView=(ImageView)findViewById(R.id.imageView);
+//        imageView=(ImageView)findViewById(R.id.imageView);
+        webView=(WebView)findViewById(R.id.webView);
+
         lockBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isLock==0){
                     isLock=1;
-//                    lockBTN.setImageResource(R.drawable.switch_on);
                 }else if(isLock==1){
                     isLock=0;
-//                    lockBTN.setImageResource(R.drawable.switch_off);
                 }
                 String sendJson=new String("{\"locker\":"+isLock
                                             +",\"alarm\":"+isAlarm
@@ -85,10 +89,8 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             public void onClick(View v) {
                 if(isAlarm==0){
                     isAlarm=1;
-//                    alarmBTN.setImageResource(R.drawable.switch_on);
                 }else if(isAlarm==1){
                     isAlarm=0;
-//                    alarmBTN.setImageResource(R.drawable.switch_off);
                 }
                 String sendJson=new String("{\"locker\":"+isLock
                         +",\"alarm\":"+isAlarm
@@ -118,6 +120,12 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         QueryTimer.schedule(queryTask,0,50);
     }
 
+    private Handler photoHandler=new Handler(){
+        public void handleMessage(Message msg){
+                webView.loadUrl("http://jasperwong.cn:8082/photo/bicycle.bmp");
+        }
+    };
+
     private Handler handler=new Handler(){
         public void handleMessage(Message msg){
             Log.d("test","enter handler");
@@ -133,67 +141,68 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                             sendUpdateRequest();        //保证成功更新服务器状态
                             Log.d("test", "update fail");
                         }
-                    } else {
+                    }
+                    else {
                         String remoteJson = responseStr;
                         try {
                             JSONObject jsonObject = new JSONObject(remoteJson);
                             bicycleStatus = Integer.parseInt(jsonObject.getString("status"));
                             bicycleLatitude = Double.parseDouble(jsonObject.getString("latitude"));
                             bicycleLongtitude = Double.parseDouble(jsonObject.getString("longitude"));
-                            bicyleLock=Integer.parseInt(jsonObject.getString("locker"));
+                            bicycleLock=Integer.parseInt(jsonObject.getString("locker"));
                             bicycleAlarm=Integer.parseInt(jsonObject.getString("alarm"));
                             isAlarm=bicycleAlarm;
-                            isLock=bicyleLock;
+                            isLock=bicycleLock;
                             Log.d("test", "status:" + bicycleStatus);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                     switch (bicycleStatus) {
-                        case 0: {
+                        case 1: {
                             statusTV.setText("自行车状态:正常");
                             break;
                         }
-                        case 1: {
+                        case 2: {
                             statusTV.setText("自行车状态:多次小范围移动");
                             break;
                         }
-                        case 2: {
+                        case 3: {
                             statusTV.setText("自行车状态:持续多次震动");
                             break;
                         }
-                        case 3: {
+                        case 4: {
                             statusTV.setText("自行车状态:倒下");
                             break;
                         }
-                        case 4: {
+                        case 5: {
                             statusTV.setText("自行车状态:被抬高超过50cm");
                             break;
                         }
-                        case 5: {
+                        case 6: {
                             statusTV.setText("自行车状态:长时间处于抬高状态");
                             break;
                         }
-                        case 6: {
+                        case 7: {
                             statusTV.setText("自行车状态:长时间处于震动状态");
                             break;
                         }
-                        case 7: {
+                        case 8: {
                             statusTV.setText("自行车状态:被撬锁");
                             break;
                         }
                         default:
                             break;
                     }
-                    if(bicyleLock==1) lockBTN.setImageResource(R.drawable.switch_on);
+                    if(isLock==1) lockBTN.setImageResource(R.drawable.switch_on);
                     else lockBTN.setImageResource(R.drawable.switch_off);
-                    if(bicycleAlarm==1) {
+                    if(isAlarm==1) {
                         alarmBTN.setImageResource(R.drawable.switch_on);
-                        imageView.setVisibility(View.VISIBLE);
+                        photoHandler.post(photoRunable);
                     }
                     else {
                         alarmBTN.setImageResource(R.drawable.switch_off);
-                        imageView.setVisibility(View.INVISIBLE);
+                        photoHandler.removeCallbacks(photoRunable);
                     }
                     break;
                 }
@@ -254,6 +263,13 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         public void run() {
             Log.d("test","start task");
             sendRequestWithHttpURLConnection("http://jasperwong.cn:8082/SmartBicycle_Server/bicycle/query?id=1");
+        }
+    };
+
+    Runnable photoRunable = new Runnable(){
+        @Override
+        public void run(){
+            photoHandler.postDelayed(photoRunable, 10000);
         }
     };
 

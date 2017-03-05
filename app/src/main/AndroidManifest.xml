@@ -84,7 +84,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="f8206bf14753854669b643569292e1b5" />
+            android:value="89b7518421476b49662524df7b84f981" />
         <!-- android:value="89b7518421476b49662524df7b84f981" -->
         <!-- "79a0cfaacbd7b8f559e046c83cc63947" -->
         surface

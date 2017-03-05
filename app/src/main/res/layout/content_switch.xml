@@ -3,14 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <WebView
+    <!--<WebView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="350dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/webView"-->
+        <!--android:background="@color/black">-->
+    <!--</WebView>-->
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/webView"
-        android:background="@color/black">
-    </WebView>
+        android:id="@+id/imageView"
+        android:src="@drawable/bicycle"
+        android:visibility="invisible"
+        >
 
+
+    </ImageView>
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"

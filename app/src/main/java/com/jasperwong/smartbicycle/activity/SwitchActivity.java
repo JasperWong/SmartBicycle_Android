@@ -46,7 +46,10 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private double bicycleLongtitude=0;
     private double bicycleLatitude=0;
     private int bicycleStatus=0;
+    private int bicyleLock=0;
+    private int bicycleAlarm=0;
     private TextView statusTV=null;
+    private ImageView imageView=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         alarmBTN=(ImageView)findViewById(R.id.alarmView);
         photoBTN=(ImageView)findViewById(R.id.photoView);
         statusTV=(TextView)findViewById(R.id.statusView);
+        imageView=(ImageView)findViewById(R.id.imageView);
         lockBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +140,8 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                             bicycleStatus = Integer.parseInt(jsonObject.getString("status"));
                             bicycleLatitude = Double.parseDouble(jsonObject.getString("latitude"));
                             bicycleLongtitude = Double.parseDouble(jsonObject.getString("longitude"));
+                            bicyleLock=Integer.parseInt(jsonObject.getString("locker"));
+                            bicycleAlarm=Integer.parseInt(jsonObject.getString("alarm"));
                             Log.d("test", "status:" + bicycleStatus);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -176,6 +182,16 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                         }
                         default:
                             break;
+                    }
+                    if(bicyleLock==1) lockBTN.setImageResource(R.drawable.switch_on);
+                    else lockBTN.setImageResource(R.drawable.switch_off);
+                    if(bicycleAlarm==1) {
+                        alarmBTN.setImageResource(R.drawable.switch_on);
+                        imageView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        alarmBTN.setImageResource(R.drawable.switch_off);
+                        imageView.setVisibility(View.INVISIBLE);
                     }
                     break;
                 }

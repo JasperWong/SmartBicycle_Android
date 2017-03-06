@@ -44,7 +44,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private boolean isUpdateDone=false;
     private boolean isUpdateStatus=false;
     Timer QueryTimer = new Timer();
-    Timer PhotoTimer=new Timer();
+    Timer PhotoTimer=null;
     SmsManager smsManager =null;
     private double bicycleLongtitude=0;
     private double bicycleLatitude=0;
@@ -120,11 +120,11 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         QueryTimer.schedule(queryTask,0,50);
     }
 
-    private Handler photoHandler=new Handler(){
-        public void handleMessage(Message msg){
-                webView.loadUrl("http://jasperwong.cn:8082/photo/bicycle.bmp");
-        }
-    };
+//    private Handler photoHandler=new Handler(){
+//        public void handleMessage(Message msg){
+//                webView.loadUrl("http://jasperwong.cn:8082/photo/bicycle.bmp");
+//        }
+//    };
 
     private Handler handler=new Handler(){
         public void handleMessage(Message msg){
@@ -198,15 +198,18 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                     else lockBTN.setImageResource(R.drawable.switch_off);
                     if(isAlarm==1) {
                         alarmBTN.setImageResource(R.drawable.switch_on);
-                        photoHandler.post(photoRunable);
+                        if(PhotoTimer==null)  PhotoTimeTask();
                     }
                     else {
                         alarmBTN.setImageResource(R.drawable.switch_off);
-                        photoHandler.removeCallbacks(photoRunable);
+                        if(PhotoTimer!=null) PhotoTimer.cancel();
                     }
                     break;
                 }
-
+                case GETPHOTO:
+                {
+                    webView.loadUrl("http://jasperwong.cn:8082/photo/bicycle.bmp");
+                }
             }
         }
     };
@@ -217,6 +220,16 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         stringBuilder.append("&alarm="+isAlarm);
         isUpdateStatus=true;
         sendRequestWithHttpURLConnection(stringBuilder.toString());
+    }
+
+    private void PhotoTimeTask(){
+        PhotoTimer=new Timer();
+        PhotoTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(GETPHOTO);
+            }
+        },0,10000);
     }
 
     private void sendRequestWithHttpURLConnection(final String UrlStr){
@@ -266,12 +279,12 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         }
     };
 
-    Runnable photoRunable = new Runnable(){
-        @Override
-        public void run(){
-            photoHandler.postDelayed(photoRunable, 10000);
-        }
-    };
+//    Runnable photoRunable = new Runnable(){
+//        @Override
+//        public void run(){
+//            photoHandler.postDelayed(photoRunable, 10000);
+//        }
+//    };
 
 
     @Override

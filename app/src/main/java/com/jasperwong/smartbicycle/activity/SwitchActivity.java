@@ -67,25 +67,24 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         alarmBTN=(ImageView)findViewById(R.id.alarmView);
         photoBTN=(ImageView)findViewById(R.id.photoView);
         statusTV=(TextView)findViewById(R.id.statusView);
-//        imageView=(ImageView)findViewById(R.id.imageView);
         webView=(WebView)findViewById(R.id.webView);
-        QueryTimer.schedule(queryTask,0,50);
+        QueryTimer.schedule(queryTask,0,100);
 
         lockBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isLock==0){
                     isLock=1;
-                    Toast.makeText(SwitchActivity.this,"开锁",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SwitchActivity.this,"开锁",Toast.LENGTH_SHORT).show();
                 }else if(isLock==1){
                     isLock=0;
-                    Toast.makeText(SwitchActivity.this,"关锁",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SwitchActivity.this,"关锁",Toast.LENGTH_SHORT).show();
                 }
                 String sendJson=new String("{\"locker\":"+isLock
                                             +",\"alarm\":"+isAlarm
                                             +",\"photo\":0}");
                 smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
-                sendUpdateRequest();
+//                sendUpdateRequest();
             }
         });
 
@@ -94,16 +93,16 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             public void onClick(View v) {
                 if(isAlarm==0){
                     isAlarm=1;
-                    Toast.makeText(SwitchActivity.this,"开启警报",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SwitchActivity.this,"开启警报",Toast.LENGTH_SHORT).show();
                 }else if(isAlarm==1){
                     isAlarm=0;
-                    Toast.makeText(SwitchActivity.this,"关闭警报",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SwitchActivity.this,"关闭警报",Toast.LENGTH_SHORT).show();
                 }
                 String sendJson=new String("{\"locker\":"+isLock
                         +",\"alarm\":"+isAlarm
                         +",\"photo\":0}");
                 smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
-                sendUpdateRequest();
+//                sendUpdateRequest();
             }
         });
 
@@ -113,7 +112,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                 String sendJson=new String("{\"locker\":"+isLock
                         +",\"alarm\":"+isAlarm
                         +",\"photo\":1}");
-                Toast.makeText(SwitchActivity.this,"重拍照片",Toast.LENGTH_LONG).show();
+                Toast.makeText(SwitchActivity.this,"重拍照片",Toast.LENGTH_SHORT).show();
                 smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
             }
         });

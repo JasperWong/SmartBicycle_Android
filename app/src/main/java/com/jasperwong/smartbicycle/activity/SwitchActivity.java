@@ -38,7 +38,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private SharedPreferences loader;
     private ImageView lockBTN=null;
     private ImageView alarmBTN=null;
-    private ImageView photoBTN=null;
+//    private ImageView photoBTN=null;
     private int isLock=0;
     private int isAlarm=0;
     public static final int RESPONSE = 0;
@@ -65,9 +65,9 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         smsManager=SmsManager.getDefault();
         lockBTN=(ImageView)findViewById(R.id.lockView);
         alarmBTN=(ImageView)findViewById(R.id.alarmView);
-        photoBTN=(ImageView)findViewById(R.id.photoView);
+//        photoBTN=(ImageView)findViewById(R.id.photoView);
         statusTV=(TextView)findViewById(R.id.statusView);
-        webView=(WebView)findViewById(R.id.webView);
+//        webView=(WebView)findViewById(R.id.webView);
         QueryTimer.schedule(queryTask,0,100);
 
         lockBTN.setOnClickListener(new View.OnClickListener() {
@@ -106,16 +106,16 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
             }
         });
 
-        photoBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String sendJson=new String("{\"locker\":"+isLock
-                        +",\"alarm\":"+isAlarm
-                        +",\"photo\":1}");
-                Toast.makeText(SwitchActivity.this,"重拍照片",Toast.LENGTH_SHORT).show();
-                smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
-            }
-        });
+//        photoBTN.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String sendJson=new String("{\"locker\":"+isLock
+//                        +",\"alarm\":"+isAlarm
+//                        +",\"photo\":1}");
+//                Toast.makeText(SwitchActivity.this,"重拍照片",Toast.LENGTH_SHORT).show();
+//                smsManager.sendTextMessage("13128235741",null,sendJson,null,null);
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

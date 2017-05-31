@@ -3,23 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/webView"
-        android:background="@color/black">
-    </WebView>
-    <!--<ImageView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="350dp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:id="@+id/imageView"-->
-        <!--android:src="@drawable/bicycle"-->
-        <!--android:visibility="invisible"-->
-        <!--&gt;-->
-    <!--</ImageView>-->
-
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -28,7 +11,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
         android:id="@+id/photoView"
-        android:background="?android:attr/selectableItemBackground"/>
+        android:background="?android:attr/selectableItemBackground"
+        android:visibility="gone"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,14 +54,15 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="35dp"
-        android:background="?android:attr/selectableItemBackground"/>
+        android:background="?android:attr/selectableItemBackground"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="自行车状态:正常"
         android:id="@+id/statusView"
-        android:layout_above="@+id/photoView"
+        android:layout_above="@+id/lockView"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:textColor="@color/white"

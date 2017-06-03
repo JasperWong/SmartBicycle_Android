@@ -38,6 +38,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     private SharedPreferences loader;
     private ImageView lockBTN=null;
     private ImageView alarmBTN=null;
+    private ImageView statusIV=null;
 //    private ImageView photoBTN=null;
     private int isLock=0;
     private int isAlarm=0;
@@ -67,6 +68,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         alarmBTN=(ImageView)findViewById(R.id.alarmView);
 //        photoBTN=(ImageView)findViewById(R.id.photoView);
         statusTV=(TextView)findViewById(R.id.statusView);
+        statusIV=(ImageView)findViewById(R.id.statusImageView);
 //        webView=(WebView)findViewById(R.id.webView);
         QueryTimer.schedule(queryTask,0,100);
 
@@ -168,26 +170,32 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                     switch (bicycleStatus) {
                         case 1: {
                             statusTV.setText("自行车状态:正常");
+                            statusIV.setImageResource(R.drawable.normal_status);
                             break;
                         }
                         case 2: {
                             statusTV.setText("自行车状态:多次小范围移动");
+                            statusIV.setImageResource(R.drawable.normal_status);
                             break;
                         }
                         case 3: {
+                            statusIV.setImageResource(R.drawable.normal_status);
                             statusTV.setText("自行车状态:持续多次震动");
                             break;
                         }
                         case 4: {
+                            statusIV.setImageResource(R.drawable.fall_status);
                             statusTV.setText("自行车状态:倒下");
                             break;
                         }
                         case 5: {
+                            statusIV.setImageResource(R.drawable.lift_status);
                             statusTV.setText("自行车状态:被抬高超过50cm");
                             break;
                         }
                         case 6: {
                             statusTV.setText("自行车状态:长时间处于抬高状态");
+                            statusIV.setImageResource(R.drawable.up_stutus);
                             break;
                         }
                         case 7: {

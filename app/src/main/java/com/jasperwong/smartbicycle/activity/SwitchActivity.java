@@ -189,13 +189,13 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                             break;
                         }
                         case 5: {
-                            statusIV.setImageResource(R.drawable.lift_status);
+                            statusIV.setImageResource(R.drawable.up_status);
                             statusTV.setText("自行车状态:被抬高超过50cm");
                             break;
                         }
                         case 6: {
                             statusTV.setText("自行车状态:长时间处于抬高状态");
-                            statusIV.setImageResource(R.drawable.up_stutus);
+                            statusIV.setImageResource(R.drawable.lift_status);
                             break;
                         }
                         case 7: {

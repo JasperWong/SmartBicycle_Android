@@ -213,7 +213,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                     else lockBTN.setImageResource(R.drawable.switch_off);
                     if(isAlarm==1) {
                         alarmBTN.setImageResource(R.drawable.switch_on);
-                        if(PhotoTimer==null)  PhotoTimeTask();
+//                        if(PhotoTimer==null)  PhotoTimeTask();
                     }
                     else {
                         alarmBTN.setImageResource(R.drawable.switch_off);
@@ -223,7 +223,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
                 }
                 case GETPHOTO:
                 {
-                    webView.loadUrl("http://jasperwong.cn:8082/photo/bicycle.bmp");
+//                    webView.loadUrl("http://jasperwong.cn:8082/photo/bicycle.bmp");
                 }
             }
         }
@@ -237,15 +237,15 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         sendRequestWithHttpURLConnection(stringBuilder.toString());
     }
 
-    private void PhotoTimeTask(){
-        PhotoTimer=new Timer();
-        PhotoTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.sendEmptyMessage(GETPHOTO);
-            }
-        },0,10000);
-    }
+//    private void PhotoTimeTask(){
+//        PhotoTimer=new Timer();
+//        PhotoTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                handler.sendEmptyMessage(GETPHOTO);
+//            }
+//        },0,10000);
+//    }
 
     private void sendRequestWithHttpURLConnection(final String UrlStr){
         // 开启线程来发起网络请求

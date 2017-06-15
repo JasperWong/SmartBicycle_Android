@@ -230,7 +230,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
     };
 
     private void sendUpdateRequest(){
-        StringBuilder stringBuilder=new StringBuilder("http://jasperwong.cn:8082/SmartBicycle_Server/bicycle/update?id=1&select=2");
+        StringBuilder stringBuilder=new StringBuilder("http://http://119.29.135.109:8082/SmartBicycle_Server/bicycle/update?id=1&select=2");
         stringBuilder.append("&locker="+isLock);
         stringBuilder.append("&alarm="+isAlarm);
         isUpdateStatus=true;
@@ -290,7 +290,7 @@ public class SwitchActivity extends BaseActivity implements NavigationView.OnNav
         @Override
         public void run() {
             Log.d("test","start task");
-            sendRequestWithHttpURLConnection("http://jasperwong.cn:8082/SmartBicycle_Server/bicycle/query?id=1");
+            sendRequestWithHttpURLConnection("http://119.29.135.109:8082/SmartBicycle_Server/bicycle/query?id=1");
         }
     };
 
